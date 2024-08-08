@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    build: ./nginx
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - app
+    restart: always
+    networks:
+      - my_network
+
+  app:
+    image: python:3
+    container_name: app
+    build: ./app
+    volumes:
+      - shared_data:/usr/src/app/shared_data
+    restart: always
+    networks:
+      - my_network
+
+
+volumes:
+  shared_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ubuntu/shared_data
+      o: bind
+
+
+networks:
+  my_network:
+    driver: bridge
