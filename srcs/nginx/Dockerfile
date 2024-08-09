@@ -1,5 +1,7 @@
-FROM nginx
-COPY ./config/nginx.conf /etc/nginx/nginx.conf
-COPY ./html/index.html /usr/share/nginx/html/index.html
+FROM nginx:latest
 
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+RUN rm /etc/nginx/nginx.conf
+COPY ./config/nginx.conf /etc/nginx/
+
+RUN rm /etc/nginx/conf.d/default.conf
+COPY solar-backend.conf /etc/nginx/conf.d/
