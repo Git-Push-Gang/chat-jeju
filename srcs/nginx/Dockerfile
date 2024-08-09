@@ -5,3 +5,5 @@ COPY ./config/nginx.conf /etc/nginx/
 
 RUN rm /etc/nginx/conf.d/default.conf
 COPY ./config/solar-backend.conf /etc/nginx/conf.d/
+
+COPY ./html/index.html /var/www/html
