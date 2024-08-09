@@ -6,29 +6,23 @@ services:
       - 80:80
       - 443:443
     depends_on:
-      - app
-    restart: always
+      - solar-backend
+    restart: unless-stopped
     networks:
       - my_network
 
   solar-backend:
     build: ./solar-backend-fastapi
     container_name: solar-backend
-    volumes:
-      - shared_data:/usr/src/app/shared_data
+    # volumes:
+    #   - shared_data:/usr/src/app/shared_data
     env_file:
       - .env
     restart: always
+    ports:
+      - 8000:8000
     networks:
       - my_network
-
-volumes:
-  shared_data:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/ubuntu/shared_data
-      o: bind
 
 networks:
   my_network:

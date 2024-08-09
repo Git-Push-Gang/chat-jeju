@@ -10,9 +10,7 @@ from app.core.config import config
 
 class OpenAIClient:
     def __init__(self, base_url: str):
-        self.client = AsyncOpenAI(
-            upstage_api_key=config.UPSTAGE_API_KEY, base_url=base_url
-        )
+        self.client = AsyncOpenAI(api_key=config.API_KEY, base_url=base_url)
 
     @retry(tries=5, delay=1, backoff=2, exceptions=APIConnectionError)
     async def generate(
