@@ -1,17 +1,9 @@
-from typing import List, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
+class BaseResponse(BaseModel):
+    message: str = Field("OK", description="Message")
+    statusCode: str = Field("200", description="Status code")
 
 class ErrorResponse(BaseModel):
-    message: str
-    statusCode: str
-
-class ChatRequest(BaseModel):
-    messages: List[str]
-    model: str = "solar-1-mini-chat"
-    stream: bool = False
-
-class ChatResponse(BaseModel):
-    message: str = "OK"
-    statusCode: str = "200"
-    data: Optional[str]
+    message: str = Field(..., description="Error message")
+    statusCode: str = Field(..., description="Status code")

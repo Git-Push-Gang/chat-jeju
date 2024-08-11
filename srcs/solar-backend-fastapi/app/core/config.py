@@ -17,16 +17,20 @@ class Config(BaseSettings):
 
     API_KEY: str
 
+    CHROMA_HOST: str = "localhost"
+    CHROMA_PORT: int = 8000
+
     @property
     def fastapi_kwargs(self) -> Dict[str, Any]:
         return {
             "title": self.TITLE,
             "version": self.VERSION,
-            "servers": [{"url": self.APP_HOST, "description": self.ENV}],
+            "servers": [
+                {"url": self.APP_HOST, "description": self.ENV}
+            ],
             "openapi_url": self.OPENAPI_URL,
             "docs_url": self.DOCS_URL,
             "redoc_url": self.REDOC_URL,
         }
-
 
 config: Config = Config()

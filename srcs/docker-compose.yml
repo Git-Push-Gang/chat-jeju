@@ -1,12 +1,15 @@
+version: '3.9'
+
 services:
   nginx:
     container_name: nginx
     build: ./nginx
     ports:
-      - 80:80
+      - "80:80"
     restart: always
     depends_on:
       - solar-backend
+      - server  # Depending on ChromaDB service as well if needed
     networks:
       - my_network
 
@@ -17,12 +20,46 @@ services:
       - .env
     restart: always
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-
     expose:
-      - 8000
+      - "8000"
+    networks:
+      - my_network
+
+  chroma:  # ChromaDB service
+    image: chroma
+    build:
+      context: chroma
+      dockerfile: Dockerfile
+    volumes:
+      - chroma-data:/chroma/chroma
+    command: "--workers 1 --host 0.0.0.0 --port 8000 --proxy-headers --log-config chromadb/log_config.yml --timeout-keep-alive 30"
+    environment:
+      - IS_PERSISTENT=TRUE
+      - CHROMA_SERVER_AUTHN_PROVIDER=${CHROMA_SERVER_AUTHN_PROVIDER}
+      - CHROMA_SERVER_AUTHN_CREDENTIALS_FILE=${CHROMA_SERVER_AUTHN_CREDENTIALS_FILE}
+      - CHROMA_SERVER_AUTHN_CREDENTIALS=${CHROMA_SERVER_AUTHN_CREDENTIALS}
+      - CHROMA_AUTH_TOKEN_TRANSPORT_HEADER=${CHROMA_AUTH_TOKEN_TRANSPORT_HEADER}
+      - PERSIST_DIRECTORY=${PERSIST_DIRECTORY:-/chroma/chroma}
+      - CHROMA_OTEL_EXPORTER_ENDPOINT=${CHROMA_OTEL_EXPORTER_ENDPOINT}
+      - CHROMA_OTEL_EXPORTER_HEADERS=${CHROMA_OTEL_EXPORTER_HEADERS}
+      - CHROMA_OTEL_SERVICE_NAME=${CHROMA_OTEL_SERVICE_NAME}
+      - CHROMA_OTEL_GRANULARITY=${CHROMA_OTEL_GRANULARITY}
+      - CHROMA_SERVER_NOFILE=${CHROMA_SERVER_NOFILE}
+    restart: unless-stopped
+    ports:
+      - "8001:8000"  # Changed to prevent conflict with solar-backend
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     networks:
       - my_network
 
 networks:
   my_network:
     driver: bridge
+
+volumes:
+  chroma-data:
+    driver: local
