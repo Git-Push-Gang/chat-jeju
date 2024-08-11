@@ -17,7 +17,7 @@ class Config(BaseSettings):
 
     API_KEY: str
 
-    CHROMA_HOST: str = "localhost"
+    CHROMA_HOST: str = "chroma"
     CHROMA_PORT: int = 8000
 
     @property
