@@ -1,4 +1,4 @@
-all:
+all: prep
 	@docker compose -f ./srcs/docker-compose.yml up -d --build
 
 down:
