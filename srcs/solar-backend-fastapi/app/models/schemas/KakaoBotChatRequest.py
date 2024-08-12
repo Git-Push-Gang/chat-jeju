@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Optional, Dict, Any
 
-from app.models.schemas.common import ChatRequest
+from app.models.schemas.chat import ChatRequest
 
 
 @dataclass
