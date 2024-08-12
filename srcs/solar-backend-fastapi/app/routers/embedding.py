@@ -40,7 +40,7 @@ async def embeddings_passage(
     Get embeddings from OpenAI API for passage
 
     Args:
-        embedding_request (EmbeddingRequest): Input Passage, Model Name
+        embedding_request (PassageQueryEmbeddingRequest): Input Passage, Model Name, Collection Name, Metadata
 
     Returns:
         EmbeddingResponse: Embedding response
