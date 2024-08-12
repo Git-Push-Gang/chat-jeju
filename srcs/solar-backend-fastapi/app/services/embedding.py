@@ -31,7 +31,7 @@ class EmbeddingService:
 
         return result
 
-    async def passage_embeddings(self, messages: List[str], model: str='solar-embedding-1-large-passage', collection: str="embeddings") -> List[EmbeddingResult]:
+    async def passage_embeddings(self, messages: List[str], model: str='solar-embedding-1-large-passage', collection: str="embeddings", metadata: str="data") -> List[EmbeddingResult]:
         """
         Request embeddings from OpenAI API for passage
 
@@ -55,6 +55,7 @@ class EmbeddingService:
             await collection.add(
                 documents=messages,
                 embeddings=embeddings,
+                ids=metadata
             )
             
         results = embeddings
