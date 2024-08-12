@@ -51,6 +51,10 @@ services:
 volumes:
   chroma-data:
     driver: local
+    driver_opts:
+      type: none
+      device: /home/ubuntu/chroma-data
+      o: bind
 
 networks:
   my_network:
