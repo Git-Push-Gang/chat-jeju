@@ -24,5 +24,8 @@ prep:
 	@if [ ! -d "/home/$$USER/shared_data" ]; then \
 		mkdir -p /home/$$USER/shared_data; \
 	fi
+	@if [ ! -d "/home/$$USER/proxy/srcs/chroma" ]; then \
+		git -C /home/$$USER/proxy/srcs clone https://github.com/chroma-core/chroma.git chroma; \
+	fi
 
 .PHONY: all re down clean prep
