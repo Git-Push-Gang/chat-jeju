@@ -46,7 +46,7 @@ async def embeddings_passage(
         EmbeddingResponse: Embedding response
     """
 
-    await embedding_serivce.passage_embeddings(messages=embedding_request.messages, model=embedding_request.model.value)
+    await embedding_serivce.passage_embeddings(messages=embedding_request.messages, model=embedding_request.model.value, collection=embedding_request.collection, metadata=embedding_request.metadata)
 
     return BaseResponse(message="Passage embeddings generated successfully")
 

@@ -13,6 +13,8 @@ class UserQueryEmbeddingRequest(EmbeddingRequest):
 
 class PassageQueryEmbeddingRequest(EmbeddingRequest):
     model: EmbeddingModel = Field(EmbeddingModel.PASSAGE, description="Model name")
+    collection: Optional[str] = Form(None, description="Collection name")
+    metadata: Optional[str] = Form(None, description="Metadata")
 
 class PdfEmbeddingRequest(BaseModel):
     file: UploadFile = Form(..., description="PDF file")
