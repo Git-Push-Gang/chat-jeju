@@ -19,8 +19,9 @@ class ChatService:
         Returns:
             List[Dict[str, str]]: List of messages
         """
+        nl = '\n'
         if contexts:
-            contexts = [f"Context: {'\n'.join([context.text for context in contexts.context])}"]
+            contexts = [f"'Context: {f'{nl}'.join([context.text for context in contexts.context])}'"]
             messages = contexts + messages
             logger.info(contexts)
 

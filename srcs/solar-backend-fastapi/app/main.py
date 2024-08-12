@@ -1,11 +1,11 @@
 from fastapi import FastAPI
-from fastapi.responses import ORJSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import ORJSONResponse
 
 from app.core.config import config
-from app.core.lifespan import lifespan
 from app.core.errors.error import BaseAPIException, BaseAuthException
 from app.core.errors.handler import api_error_handler, api_auth_error_handler
+from app.core.lifespan import lifespan
 from app.routers import v1_router
 
 
@@ -25,5 +25,6 @@ def get_application() -> FastAPI:
     )
 
     return application
+
 
 app = get_application()

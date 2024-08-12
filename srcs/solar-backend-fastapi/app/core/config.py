@@ -1,7 +1,10 @@
 import logging
 from typing import Dict, Any
 
+import dotenv
 from pydantic_settings import BaseSettings
+
+dotenv.load_dotenv()
 
 
 class Config(BaseSettings):
@@ -32,5 +35,6 @@ class Config(BaseSettings):
             "docs_url": self.DOCS_URL,
             "redoc_url": self.REDOC_URL,
         }
+
 
 config: Config = Config()
