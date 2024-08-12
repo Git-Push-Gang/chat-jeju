@@ -15,7 +15,9 @@ from app.services.service_factory import ServiceFactory
 router = APIRouter()
 
 @router.post("/embeddings/query", response_model=EmbeddingResponse, responses={400: {"model": ErrorResponse}})
-async def embeddings_query(embedding_request: UserQueryEmbeddingRequest, embedding_serivce: EmbeddingService = Depends(ServiceFactory.get_embedding_service)) -> EmbeddingResponse:
+async def embeddings_query(
+    embedding_request: UserQueryEmbeddingRequest, 
+    embedding_serivce: EmbeddingService = Depends(ServiceFactory.get_embedding_service)) -> EmbeddingResponse:
     """
     Get embeddings from OpenAI API for query
 
@@ -31,7 +33,9 @@ async def embeddings_query(embedding_request: UserQueryEmbeddingRequest, embeddi
     return EmbeddingResponse(data=result)
 
 @router.post("/embeddings/passage", response_model=EmbeddingResponse, responses={400: {"model": ErrorResponse}})
-async def embeddings_passage(embedding_request: PassageQueryEmbeddingRequest, embedding_serivce: EmbeddingService = Depends(ServiceFactory.get_embedding_service)) -> EmbeddingResponse:
+async def embeddings_passage(
+    embedding_request: PassageQueryEmbeddingRequest, 
+    embedding_serivce: EmbeddingService = Depends(ServiceFactory.get_embedding_service)) -> EmbeddingResponse:
     """
     Get embeddings from OpenAI API for passage
 
@@ -42,10 +46,9 @@ async def embeddings_passage(embedding_request: PassageQueryEmbeddingRequest, em
         EmbeddingResponse: Embedding response
     """
 
-    result = await embedding_serivce._embeddings(messages=embedding_request.messages, model=embedding_request.model.value)
+    await embedding_serivce.passage_embeddings(messages=embedding_request.messages, model=embedding_request.model.value)
 
-    return EmbeddingResponse(data=result)
-
+    return BaseResponse(message="Passage embeddings generated successfully")
 
 @router.post("/embeddings/pdf", response_model=BaseResponse, responses={400: {"model": ErrorResponse}})
 async def embeddings_pdf(

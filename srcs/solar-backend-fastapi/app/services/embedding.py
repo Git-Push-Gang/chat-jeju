@@ -31,6 +31,35 @@ class EmbeddingService:
 
         return result
 
+    async def passage_embeddings(self, messages: List[str], model: str='solar-embedding-1-large-passage', collection: str="embeddings") -> List[EmbeddingResult]:
+        """
+        Request embeddings from OpenAI API for passage
+
+        Args:
+            messages (List[str]): Passage messages
+
+        Returns:
+            List[float]: Embedding response
+        """
+
+        embeddings: List[EmbeddingResult] = await self.open_ai_client.embeddings(messages=messages, model=model)
+        
+        async with get_chrome_client() as client:
+            collection_name = f"embeddings-{collection}" if collection else "embeddings"
+            try:
+                await client.create_collection(name=collection_name)
+            except Exception:
+                logger.info(f"Collection {collection_name} already exists")
+
+            collection: Collection = await client.get_collection(collection_name)
+            await collection.add(
+                documents=messages,
+                embeddings=embeddings,
+            )
+            
+        results = embeddings
+        return results
+
     async def pdf_embeddings(self, file: UploadFile, collection: str) -> List[EmbeddingResult]:
         """
         Request embeddings from OpenAI API for PDF file
