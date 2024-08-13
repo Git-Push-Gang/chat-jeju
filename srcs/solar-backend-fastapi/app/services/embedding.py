@@ -51,12 +51,8 @@ class EmbeddingService:
         
         async with get_chrome_client() as client:
             collection_name = f"embeddings-{collection}" if collection else "embeddings"
-            try:
-                await client.create_collection(name=collection_name)
-            except Exception:
-                logger.info(f"Collection {collection_name} already exists")
 
-            collection: Collection = await client.get_collection(collection_name)
+            collection: Collection = await client.get_or_create_collection(collection_name)
             await collection.add(
                 documents=messages,
                 embeddings=embeddings,
