@@ -32,10 +32,11 @@ async def embeddings_query(
 
     return EmbeddingResponse(data=result)
 
+
 @router.post("/embeddings/passage", response_model=EmbeddingResponse, responses={400: {"model": ErrorResponse}})
 async def embeddings_passage(
     embedding_request: PassageQueryEmbeddingRequest, 
-    embedding_serivce: EmbeddingService = Depends(ServiceFactory.get_embedding_service)) -> EmbeddingResponse:
+    embedding_service: EmbeddingService = Depends(ServiceFactory.get_embedding_service)) -> EmbeddingResponse:
     """
     Get embeddings from OpenAI API for passage
 
@@ -45,11 +46,15 @@ async def embeddings_passage(
     Returns:
         EmbeddingResponse: Embedding response
     """
-
-    await embedding_serivce.passage_embeddings(messages=embedding_request.messages, model=embedding_request.model.value, collection=embedding_request.collection, metadata=embedding_request.metadata)
-
-    return BaseResponse(message="Passage embeddings generated successfully")
-
+    
+    result = await embedding_service.passage_embeddings(
+        messages=embedding_request.messages, 
+        model=embedding_request.model.value, 
+        collection=embedding_request.collection, 
+        id=embedding_request.id
+    )
+    return EmbeddingResponse(data=result)
+    
 @router.post("/embeddings/pdf", response_model=BaseResponse, responses={400: {"model": ErrorResponse}})
 async def embeddings_pdf(
     embedding_request: PdfEmbeddingRequest = Depends(validate_pdf_file),

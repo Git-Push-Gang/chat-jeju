@@ -31,7 +31,10 @@ class EmbeddingService:
 
         return result
 
-    async def passage_embeddings(self, messages: List[str], model: str='solar-embedding-1-large-passage', collection: str="embeddings", metadata: str="data") -> List[EmbeddingResult]:
+    async def passage_embeddings(self, messages: List[str],
+                                 model: str='solar-embedding-1-large-passage', 
+                                 collection: str="embeddings", 
+                                 id: str="data") -> List[EmbeddingResult]:
         """
         Request embeddings from OpenAI API for passage
 
@@ -42,7 +45,9 @@ class EmbeddingService:
             List[float]: Embedding response
         """
 
-        embeddings: List[EmbeddingResult] = await self.open_ai_client.embeddings(messages=messages, model=model)
+        results: List[EmbeddingResult] = await self.open_ai_client.embeddings(messages=messages, model=model)
+        embeddings = [result.embedding for result in results]
+        ids = [f"{id}_{i}" for i in range(len(messages))]
         
         async with get_chrome_client() as client:
             collection_name = f"embeddings-{collection}" if collection else "embeddings"
@@ -55,10 +60,9 @@ class EmbeddingService:
             await collection.add(
                 documents=messages,
                 embeddings=embeddings,
-                ids=metadata
+                ids=ids
             )
             
-        results = embeddings
         return results
 
     async def pdf_embeddings(self, file: UploadFile, collection: str) -> List[EmbeddingResult]:
