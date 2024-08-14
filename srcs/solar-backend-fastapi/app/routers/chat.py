@@ -32,7 +32,8 @@ async def chat(
     """
     contexts = None
     if chat_request.rag:
-        contexts = await embedding_service.rag(messages=chat_request.messages)
+        embedding_collection = chat_request.collection if chat_request.collection else None
+        contexts = await embedding_service.rag(messages=chat_request.messages, embedding_collection=embedding_collection)
 
     if chat_request.stream:
         response = await chat_service.stream_chat(messages=chat_request.messages, model=chat_request.model.value,

@@ -103,7 +103,7 @@ class EmbeddingService:
 
         return results
 
-    async def rag(self, messages: List[str], model: str='solar-embedding-1-large-query') -> Optional[EmbeddingContextList]:
+    async def rag(self, messages: List[str], model: str='solar-embedding-1-large-query', embedding_collection="embeddings") -> Optional[EmbeddingContextList]:
         """
         Search embeddings from ChromaDB top-10 similar embeddings
 
@@ -118,7 +118,7 @@ class EmbeddingService:
         embeddings: List[EmbeddingResult] = await self.open_ai_client.embeddings(messages=messages, model=model)
 
         async with get_chrome_client() as client:
-            collection: Collection = await client.get_collection("embeddings")
+            collection: Collection = await client.get_collection(embedding_collection)
             result: QueryResult = await collection.query(
                 query_embeddings=[embedding.embedding for embedding in embeddings],
                 n_results=10)
