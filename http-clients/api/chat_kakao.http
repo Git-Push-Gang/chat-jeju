@@ -16,7 +16,7 @@ Content-Type: application/json
       "id": "es2mb937ado5bmj04dkzmogn",
       "name": "블록 이름"
     },
-    "utterance": "Hi, Please recommend the place to drink near east-kareum",
+    "utterance": "동카름 주변 맛집 추천해줘",
     "lang": null,
     "user": {
       "id": "945412",

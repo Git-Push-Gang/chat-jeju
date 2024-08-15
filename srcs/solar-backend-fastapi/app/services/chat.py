@@ -23,7 +23,7 @@ class ChatService:
         if contexts:
             contexts = [f"'Context: {f'{nl}'.join([context.text for context in contexts.context])}'"]
             messages = contexts + messages
-            logger.info(contexts)
+            logger.info(f'contexts: {contexts}')
 
         message=[
             {

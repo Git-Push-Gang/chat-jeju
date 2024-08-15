@@ -1,6 +1,8 @@
+import json
 from dataclasses import dataclass, field
 from typing import Optional, Dict, Any
 
+from app.models.schemas import SYSTEM_PROMPT
 from app.models.schemas.chat import ChatRequest
 
 
@@ -55,5 +57,9 @@ class KakaoBotChatRequest:
     bot: Bot
     action: Action
 
-    def to_chat_request(self) -> ChatRequest:
-        return ChatRequest(messages=[self.userRequest.utterance])
+    def to_chat_request(self, rag, collection="embeddings", model="solar-1-mini-chat") -> ChatRequest:
+        messages = [SYSTEM_PROMPT, json.dumps({
+            "role": "user",
+            "content": self.userRequest.utterance
+        })]
+        return ChatRequest(messages=messages, rag=rag, collection=collection, model=model)
