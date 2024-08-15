@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.core.logger import logger
@@ -26,21 +28,22 @@ async def chat(
 
     ##################### Function Calling ######################
 
-    messages = chat_request.messages
+    messages = [{
+        "role": "user",
+        "content": '동카름 주변 맛집 추천해줘'
+    }]
     tools = [
         {
             "type": "function",
             "function": {
                 "name": "get_dining_recommendation",
-                "description": "Get a list of dining recommendations asked by a user, \
-                such as dining options nearby or in a specific region",
+                "description": "Get a list of dining recommendations asked by a user, such as dining options nearby or in a specific region",
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "region_name": {
                             "type": "string",
-                            "description": "Choose region in Jeju Island categorized regarding direction.\
-                            Region name e.g. east-kareum, al-kareum",
+                            "description": "Choose region in Jeju Island categorized regarding direction. Region name e.g. east-kareum, al-kareum",
                         },
                         "message": {
                             "type": "string",
@@ -53,29 +56,29 @@ async def chat(
         }
     ]
 
+    logger.info("####### 1")
+
     response_message = await function_call_service.function_call(
-        model=chat_request.model.value,
         messages=messages,
         tools=tools,
         tool_choice="auto",
     )
-
+    logger.info("####### 2")
     tool_calls = response_message.tool_calls
-    print(f'tool_calls: {tool_calls}')
-
-
-    # if tool_calls:
-    #     messages.append(response_message)
+    # print(f'tool_calls: {tool_calls}')
     #
-    #     for tool_call in tool_calls:
-    #         function_name = tool_call.function.name
-    #         function_to_call = available_functions[function_name]
-    #         function_args = json.loads(tool_call.function.arguments)
-    #         print(f"function_args: {function_args}")
-    #         function_response = function_to_call(
-    #             message=chat_request.messages,
-    #             location_name="제주하늘바람"
-    #         )
+    if tool_calls:
+        messages.append(response_message)
+    #
+        for tool_call in tool_calls:
+            function_name = tool_call.function.name
+            function_to_call = available_functions[function_name]
+            function_args = json.loads(tool_call.function.arguments)
+            print(f"function_args: {function_args}")
+            function_response = function_to_call(
+                message=chat_request.messages,
+                location_name="제주하늘바람"
+            )
     #
     #         # messages.append(
     #         #     {
