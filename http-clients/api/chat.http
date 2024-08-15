@@ -1,0 +1,13 @@
+POST {{host}}/api/v1/chat?client_name=solar
+accept: application/json
+Content-Type: application/json
+
+{
+  "messages": [
+    "제주도 음식 추천해줘"
+  ],
+  "model": "solar-1-mini-chat",
+  "stream": true,
+  "rag": true,
+  "collection": "embeddings"
+}
