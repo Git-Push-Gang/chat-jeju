@@ -1,13 +1,14 @@
 import asyncio
 from typing import List, Optional
 
-from fastapi import UploadFile
 from chromadb import Collection, QueryResult
+from fastapi import UploadFile
 
 from app.clients import OpenAIClient, UpstageClient
-from app.models.schemas import EmbeddingResult, LayoutAnalysisResult, EmbeddingContext, EmbeddingContextList
 from app.core.db import get_chrome_client
 from app.core.logger import logger
+from app.models.schemas import EmbeddingResult, LayoutAnalysisResult, EmbeddingContext, EmbeddingContextList
+
 
 class EmbeddingService:
 
@@ -51,8 +52,9 @@ class EmbeddingService:
         
         async with get_chrome_client() as client:
             collection_name = f"embeddings-{collection}" if collection else "embeddings"
-
+            logger.info(f'collection_name: {collection_name}')
             collection: Collection = await client.get_or_create_collection(collection_name)
+            logger.info(f'collection: {collection}')
             await collection.add(
                 documents=messages,
                 embeddings=embeddings,

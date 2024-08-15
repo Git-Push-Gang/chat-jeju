@@ -3,6 +3,7 @@ import logging
 from fastapi import APIRouter, Depends
 
 from app.core.dependencies import validate_pdf_file
+from app.core.logger import logger
 from app.models.schemas import (
     BaseResponse,
     ErrorResponse,
@@ -48,7 +49,7 @@ async def embeddings_passage(
     Returns:
         EmbeddingResponse: Embedding response
     """
-    logging.info(f'embedding_request: {embedding_request}')
+    logger.info(f'embedding_request: {embedding_request}')
     result = await embedding_service.passage_embeddings(
         messages=embedding_request.messages, 
         model=embedding_request.model.value, 
