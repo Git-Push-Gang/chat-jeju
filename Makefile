@@ -20,9 +20,6 @@ clean:
 	fi
 	@docker network ls | tail -n +2 | awk '$$2 !~ /bridge|none|host/' | awk '{ print $$1 }' | xargs -r -I {} docker network rm {}
 
-update_requirements:
-	@pip freeze > srcs/solar-backend-fastapi/config/requirements.txt
-
 prep:
 	@if [ ! -d "/home/$$USER/chroma-data" ]; then \
 		mkdir -p /home/$$USER/chroma-data; \
@@ -31,11 +28,11 @@ prep:
 		git -C /home/$$USER/proxy/srcs clone https://github.com/chroma-core/chroma.git chroma; \
 	fi
 
-local: update_requirements
+local:
 	@docker compose -f ./srcs/docker-compose.yml stop nginx solar-backend
 	@docker compose -f ./srcs/docker-compose.yml up -d --build
 
-local-all: down update_requirements
+local-all: down
 	@docker compose -f ./srcs/docker-compose.yml up -d --build
 
-.PHONY: all re down clean prep local update_requirements
+.PHONY: all re down clean prep local
