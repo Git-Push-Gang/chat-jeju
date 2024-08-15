@@ -37,6 +37,7 @@ async def chat(
         contexts = None
         if chat_request.rag:
             embedding_collection = chat_request.collection if chat_request.collection else None
+            logger.info(f'embedding_collection: {embedding_collection}')
             contexts = await embedding_service.rag(messages=chat_request.messages,
                                                    embedding_collection=embedding_collection)
 
