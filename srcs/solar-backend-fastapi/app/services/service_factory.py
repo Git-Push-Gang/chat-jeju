@@ -24,7 +24,7 @@ class ServiceFactory:
             open_ai_client=OpenAI(api_key=os.getenv("API_KEY"), base_url=cls.base_urls[client_name]))
 
     @classmethod
-    def get_embedding_service(cls, client_name: str = 'solar') -> ChatService:
+    def get_embedding_service(cls, client_name: str = 'solar') -> EmbeddingService:
         return EmbeddingService(
             open_ai_client=OpenAIClient(base_url=cls.base_urls[client_name]),
             upstage_client=UpstageClient(base_url=cls.base_urls[client_name]))

@@ -1,22 +1,21 @@
 from __future__ import annotations
 
-import traceback
-from typing import List, Optional
+from typing import List, Any, Coroutine
 
 from fastapi import Depends
 
-from app.core.logger import logger
+from app.models.schemas import EmbeddingContextList
 from app.services import EmbeddingService
 from app.services.service_factory import ServiceFactory
-from app.models.schemas import EmbeddingContextList
 
-def get_dining_recommendation(region_name:str, 
-                              messages: List[str],
-                              embedding_service: EmbeddingService = Depends(ServiceFactory.get_embedding_service),
-                              ) -> Optional[EmbeddingContextList]:
+
+async def get_dining_recommendation(region_name: str,
+                                    messages: List[str],
+                                    embedding_service: EmbeddingService = Depends(ServiceFactory.get_embedding_service),
+                                    ) -> EmbeddingContextList | None:
     collection_name = region_name + "_" + "dining"
-    
-    return embedding_service.rag(messages=messages, embedding_collection=collection_name)
+    # collection_name = "embeddings"
+    return await embedding_service.rag(messages=messages, embedding_collection=collection_name)
 
 
 description = {

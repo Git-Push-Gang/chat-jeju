@@ -58,8 +58,4 @@ class KakaoBotChatRequest:
     action: Action
 
     def to_chat_request(self, rag, collection="embeddings", model="solar-1-mini-chat") -> ChatRequest:
-        messages = [SYSTEM_PROMPT, json.dumps({
-            "role": "user",
-            "content": self.userRequest.utterance
-        })]
-        return ChatRequest(messages=messages, rag=rag, collection=collection, model=model)
+        return ChatRequest(messages=[self.userRequest.utterance], rag=rag, collection=collection, model=model)
