@@ -1,8 +1,11 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends
+import traceback
+
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 
+from app.core.logger import logger
 from app.models.schemas import (
     ChatRequest,
     ChatResponse,
@@ -30,20 +33,25 @@ async def chat(
     Returns:
         ChatResponse | StreamingResponse: Chat response
     """
-    contexts = None
-    if chat_request.rag:
-        embedding_collection = chat_request.collection if chat_request.collection else None
-        contexts = await embedding_service.rag(messages=chat_request.messages, embedding_collection=embedding_collection)
+    try:
+        contexts = None
+        if chat_request.rag:
+            embedding_collection = chat_request.collection if chat_request.collection else None
+            contexts = await embedding_service.rag(messages=chat_request.messages,
+                                                   embedding_collection=embedding_collection)
 
-    if chat_request.stream:
-        response = await chat_service.stream_chat(messages=chat_request.messages, model=chat_request.model.value,
-                                                  contexts=contexts)
+        if chat_request.stream:
+            response = await chat_service.stream_chat(messages=chat_request.messages, model=chat_request.model.value,
+                                                      contexts=contexts)
 
-        return StreamingResponse(
-            content=response,
-            media_type="text/event-stream")
-    else:
-        response = await chat_service.chat(messages=chat_request.messages, model=chat_request.model.value,
-                                           contexts=contexts)
+            return StreamingResponse(
+                content=response,
+                media_type="text/event-stream")
+        else:
+            response = await chat_service.chat(messages=chat_request.messages, model=chat_request.model.value,
+                                               contexts=contexts)
 
-        return ChatResponse(data=response)
+            return ChatResponse(data=response)
+    except Exception as e:
+        logger.error(f"## Error occurred. error: {traceback.format_exc()}")
+        raise HTTPException(status_code=500, detail=str(e))
