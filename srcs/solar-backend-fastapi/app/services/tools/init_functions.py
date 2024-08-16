@@ -9,10 +9,7 @@ module_dir = os.path.join(current_dir, 'functions')
 if module_dir not in sys.path:
     sys.path.append(module_dir)
 
-print(module_dir)
-
 module_names = [f.replace('.py', '') for f in os.listdir(module_dir) if f.endswith('.py')]
-print(module_names)
 
 functions = {}
 function_descriptions = []
@@ -31,5 +28,3 @@ for name in module_names:
 
     except ImportError as e:
         print(f"Failed to import {module}: {e}")
-
-print(functions)

@@ -19,9 +19,6 @@ class FunctionCallService:
                                 tools,  # TODO 타입 입력
                                 tool_choice,  # TODO 타입 입력
                                 model: str = 'solar-1-mini-chat') -> ChatCompletionMessage:
-
-        print(f'messages: {messages}')
-        print(f'tools: {tools}')
         try:
             return self.open_ai_client.chat.completions.create(
                 model=model,
