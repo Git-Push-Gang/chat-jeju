@@ -11,6 +11,7 @@ from app.services import ChatService, EmbeddingService
 from app.services.function_call import FunctionCallService
 from app.services.measure_time import measure_time
 from app.services.service_factory import ServiceFactory
+from app.services.langid import LangIDCallService
 from app.services.tools.init_functions import function_descriptions, functions
 
 router = APIRouter()
@@ -20,10 +21,14 @@ router = APIRouter()
 @router.post("/chat/kakao", response_model=KakaoBotChatResponse, responses={400: {"model": ErrorResponse}})
 async def chat(
         kakao_request: KakaoBotChatRequest,
+        langid_service: LangIDCallService = Depends(ServiceFactory.get_langid_service),
         chat_service: ChatService = Depends(ServiceFactory.get_chat_service),
         function_call_service: FunctionCallService = Depends(ServiceFactory.get_function_call_service),
         embedding_service: EmbeddingService = Depends(ServiceFactory.get_embedding_service),
 ) -> KakaoBotChatResponse:
+    lang = await langid_service.get_language_id(messages=[kakao_request.userRequest.utterance])
+    # ["en", "ko"] 형태로 반환됨
+    
     logger.info(f'-- kakao_request: {kakao_request}')
     request = kakao_request.to_chat_request()
     try:
