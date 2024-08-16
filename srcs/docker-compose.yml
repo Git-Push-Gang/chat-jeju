@@ -48,6 +48,17 @@ services:
     networks:
       - my_network
 
+  langid:
+    build: ./langid
+    container_name: langid
+    restart: always
+    command: "python3 py3langid/py3langid/langid.py -s --host=langid --port=9008"
+    ports:
+      - 9008:9008
+    networks:
+      - my_network
+    
+
 volumes:
   chroma-data:
     driver: local
