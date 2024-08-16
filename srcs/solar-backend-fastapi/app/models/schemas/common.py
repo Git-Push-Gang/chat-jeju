@@ -1,4 +1,3 @@
-import json
 from typing import Any
 
 from pydantic import BaseModel, Field
@@ -15,8 +14,5 @@ class ErrorResponse(BaseModel):
     statusCode: str = Field(..., description="Status code")
 
 
-SYSTEM_PROMPT = json.dumps({
-    "role": "system",
-    "content": "You're good at summarizing. Limit your answer to a maximum of three items. " +
-               "Limit the length of your answer to 300 characters."
-})
+SYSTEM_PROMPT = ("You're good at summarizing. Limit your answer to a maximum of three places]. Limit the length of "
+                 "your answer to 300 characters.")

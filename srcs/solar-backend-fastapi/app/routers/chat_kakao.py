@@ -3,8 +3,7 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.models.schemas import (
-    ErrorResponse,
-)
+    ErrorResponse, )
 from app.models.schemas.KakaoBotChatRequest import KakaoBotChatRequest
 from app.models.schemas.KakaoBotChatResponse import KakaoBotChatResponse, Template, Output, SimpleText
 from app.services import ChatService, EmbeddingService
@@ -26,23 +25,19 @@ async def chat(
 ) -> KakaoBotChatResponse:
     request = kakao_request.to_chat_request(rag=True)
     try:
-        messages = [{
-            "role": "user",
-            "content": request.messages[0]
-        }]
-        tools = function_descriptions
-
         # Tool Calls Selection
         tool_calls_response = await function_call_service.select_tool_calls(
-            messages=messages,
-            tools=tools,
+            messages=[{
+                "role": "user",
+                "content": request.messages[0]
+            }],
+            tools=function_descriptions,
             tool_choice="auto",
         )
         tool_calls = tool_calls_response.tool_calls
         print(f'tool_calls: {tool_calls}')
 
         if tool_calls:
-            messages.append(tool_calls_response)
 
             for tool_call in tool_calls:
                 function_name = tool_call.function.name
@@ -50,11 +45,11 @@ async def chat(
 
                 # Function Calling with RAG
                 contexts = await function_to_call(
-                    messages=request.messages,
+                    messages=request.messages,  # rag 를 위한 function 에서는 사용자 발화만 전달함
                     region_name="east-kareum",  # 1차적으로 고정값 사용
                     embedding_service=embedding_service
                 )
-                print(f'---- function_response: {contexts}')
+                print(f'---- contexts: {contexts}')
 
                 final_response = await chat_service.chat(messages=request.messages,
                                                          model=request.model.value,

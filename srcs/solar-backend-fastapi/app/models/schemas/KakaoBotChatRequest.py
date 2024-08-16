@@ -1,8 +1,6 @@
-import json
 from dataclasses import dataclass, field
 from typing import Optional, Dict, Any
 
-from app.models.schemas import SYSTEM_PROMPT
 from app.models.schemas.chat import ChatRequest
 
 

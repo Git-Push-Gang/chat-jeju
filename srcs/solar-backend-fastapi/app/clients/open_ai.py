@@ -31,7 +31,7 @@ class OpenAIClient:
             raise OpenAIException(f"Embedding failed: {e}")
 
     @retry(tries=5, delay=1, backoff=2, exceptions=APIConnectionError)
-    async def generate(self, messages: List[str], model: str = "solar-1-mini-chat", **kwargs) -> str:
+    async def generate(self, messages: List[str], model: str = "solar-1-mini-chat", **kwargs: object) -> str:
         logger.info(f"Generating completion for message: {messages}, model: {model}")
         try:
             response = await self.client.chat.completions.create(

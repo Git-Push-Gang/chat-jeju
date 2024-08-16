@@ -16,7 +16,7 @@ async def get_dining_recommendation(region_name: str,
                                     embedding_service: EmbeddingService = Depends(ServiceFactory.get_embedding_service),
                                     ) -> EmbeddingContextList | None:
     collection_name = "embeddings-" + region_name + "_" + "dining"
-    # collection_name = "embeddings"
+
     return await embedding_service.rag(messages=messages, embedding_collection=collection_name)
 
 

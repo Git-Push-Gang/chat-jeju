@@ -1,8 +1,7 @@
 from typing import List, Dict, AsyncGenerator, Optional
 
 from app.clients import OpenAIClient
-from app.core.logger import logger
-from app.models.schemas import EmbeddingContextList
+from app.models.schemas import EmbeddingContextList, SYSTEM_PROMPT
 from app.services.measure_time import measure_time
 
 
@@ -17,6 +16,7 @@ class ChatService:
         Generate message for chat
 
         Args:
+            contexts:
             messages (str): List of messages
 
         Returns:
@@ -26,14 +26,12 @@ class ChatService:
         if contexts:
             contexts = [f"'Context: {f'{nl}'.join([context.text for context in contexts.context])}'"]
             messages = contexts + messages
-            logger.info(f'contexts: {contexts}')
 
         message = [
             {
                 "role": "system",
-                "content": "You are a helpful assistant."  # Please Put Default Prompt Here
-            },
-            {
+                "content": SYSTEM_PROMPT
+            }, {
                 "role": "user",
                 "content": "\n".join(messages)
             }
@@ -51,6 +49,7 @@ class ChatService:
         If you want to add extra logic, you can add it here. e.g. filtering, validation, rag, etc.
 
         Args:
+            contexts:
             messages (List[str]): List of messages
             model (str, optional): Model name. Defaults to 'solar-1-mini-chat'.
 
