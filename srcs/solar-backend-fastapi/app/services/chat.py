@@ -1,15 +1,18 @@
 from typing import List, Dict, AsyncGenerator, Optional
 
 from app.clients import OpenAIClient
-from app.models.schemas import EmbeddingContextList
 from app.core.logger import logger
+from app.models.schemas import EmbeddingContextList
+from app.services.measure_time import measure_time
+
 
 class ChatService:
 
     def __init__(self, open_ai_client: OpenAIClient):
         self.open_ai_client = open_ai_client
 
-    def get_message(self, messages: str, contexts: Optional[EmbeddingContextList],  ) -> List[Dict[str, str]]:
+    @measure_time
+    def get_message(self, messages: str, contexts: Optional[EmbeddingContextList], ) -> List[Dict[str, str]]:
         """
         Generate message for chat
 
@@ -25,10 +28,10 @@ class ChatService:
             messages = contexts + messages
             logger.info(f'contexts: {contexts}')
 
-        message=[
+        message = [
             {
                 "role": "system",
-                "content": "You are a helpful assistant." # Please Put Default Prompt Here
+                "content": "You are a helpful assistant."  # Please Put Default Prompt Here
             },
             {
                 "role": "user",
@@ -38,7 +41,11 @@ class ChatService:
 
         return message
 
-    async def chat(self, messages: List[str], contexts: Optional[EmbeddingContextList],  model: str='solar-1-mini-chat') -> str:
+    @measure_time
+    async def chat(self,
+                   messages: List[str],
+                   contexts: Optional[EmbeddingContextList],
+                   model: str = 'solar-1-mini-chat') -> str:
         """
         Request completion from OpenAI API
         If you want to add extra logic, you can add it here. e.g. filtering, validation, rag, etc.
@@ -54,7 +61,9 @@ class ChatService:
 
         return response
 
-    async def stream_chat(self, messages: List[str], contexts: Optional[EmbeddingContextList],  model: str='solar-1-mini-chat') -> AsyncGenerator:
+    @measure_time
+    async def stream_chat(self, messages: List[str], contexts: Optional[EmbeddingContextList],
+                          model: str = 'solar-1-mini-chat') -> AsyncGenerator:
         """
         Request stream completion from OpenAI API
         If you want to add extra logic, you can add it here. e.g. filtering, validation, rag, etc.
