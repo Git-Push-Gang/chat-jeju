@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException
 
+from app.core.logger import logger
 from app.models.schemas import (
     ErrorResponse, )
 from app.models.schemas.KakaoBotChatRequest import KakaoBotChatRequest
@@ -23,6 +24,7 @@ async def chat(
         function_call_service: FunctionCallService = Depends(ServiceFactory.get_function_call_service),
         embedding_service: EmbeddingService = Depends(ServiceFactory.get_embedding_service),
 ) -> KakaoBotChatResponse:
+    logger.info(f'-- kakao_request: {kakao_request}')
     request = kakao_request.to_chat_request()
     try:
         user_utterances = request.messages

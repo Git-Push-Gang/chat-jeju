@@ -55,5 +55,5 @@ class KakaoBotChatRequest:
     bot: Bot
     action: Action
 
-    def to_chat_request(self, rag, collection="embeddings", model="solar-1-mini-chat") -> ChatRequest:
-        return ChatRequest(messages=[self.userRequest.utterance], rag=rag, collection=collection, model=model)
+    def to_chat_request(self, collection="embeddings", model="solar-1-mini-chat") -> ChatRequest:
+        return ChatRequest(messages=[self.userRequest.utterance], collection=collection, model=model)
