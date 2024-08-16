@@ -6,9 +6,11 @@ from fastapi import Depends
 
 from app.models.schemas import EmbeddingContextList
 from app.services import EmbeddingService
+from app.services.measure_time import measure_time
 from app.services.service_factory import ServiceFactory
 
 
+@measure_time
 def get_to_do_recommendation(region_name: str,
                              messages: List[str],
                              embedding_service: EmbeddingService = Depends(ServiceFactory.get_embedding_service),

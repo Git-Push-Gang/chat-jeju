@@ -8,6 +8,7 @@ from app.clients import OpenAIClient, UpstageClient
 from app.core.db import get_chrome_client
 from app.core.logger import logger
 from app.models.schemas import EmbeddingResult, LayoutAnalysisResult, EmbeddingContext, EmbeddingContextList
+from app.services.measure_time import measure_time
 
 
 class EmbeddingService:
@@ -105,6 +106,7 @@ class EmbeddingService:
 
         return results
 
+    @measure_time
     async def rag(self, messages: List[str], model: str='solar-embedding-1-large-query', embedding_collection="embeddings") -> Optional[EmbeddingContextList]:
         """
         Search embeddings from ChromaDB top-10 similar embeddings

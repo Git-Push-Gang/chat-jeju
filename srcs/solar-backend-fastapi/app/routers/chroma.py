@@ -5,10 +5,12 @@ from fastapi import HTTPException, APIRouter
 from app.core.db import get_chrome_client
 from app.core.logger import logger
 from app.models.schemas import ErrorResponse, BaseResponse
+from app.services.measure_time import measure_time
 
 router = APIRouter()
 
 
+@measure_time
 @router.get("/db/collections", response_model=BaseResponse, responses={400: {"model": ErrorResponse}})
 async def list_collections():
     async with get_chrome_client() as client:

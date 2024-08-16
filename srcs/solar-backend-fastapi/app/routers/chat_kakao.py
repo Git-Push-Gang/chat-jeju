@@ -9,12 +9,14 @@ from app.models.schemas.KakaoBotChatRequest import KakaoBotChatRequest
 from app.models.schemas.KakaoBotChatResponse import KakaoBotChatResponse, Template, Output, SimpleText
 from app.services import ChatService, EmbeddingService
 from app.services.function_call import FunctionCallService
+from app.services.measure_time import measure_time
 from app.services.service_factory import ServiceFactory
 from app.services.tools.init_functions import function_descriptions, functions
 
 router = APIRouter()
 
 
+@measure_time
 @router.post("/chat/kakao", response_model=KakaoBotChatResponse, responses={400: {"model": ErrorResponse}})
 async def chat(
         kakao_request: KakaoBotChatRequest,

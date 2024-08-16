@@ -1,5 +1,3 @@
-import logging
-
 from fastapi import APIRouter, Depends
 
 from app.core.dependencies import validate_pdf_file
@@ -13,6 +11,7 @@ from app.models.schemas import (
     PdfEmbeddingRequest,
 )
 from app.services import EmbeddingService
+from app.services.measure_time import measure_time
 from app.services.service_factory import ServiceFactory
 
 router = APIRouter()
@@ -36,6 +35,7 @@ async def embeddings_query(
     return EmbeddingResponse(data=result)
 
 
+@measure_time
 @router.post("/embeddings/passage", response_model=EmbeddingResponse, responses={400: {"model": ErrorResponse}})
 async def embeddings_passage(
     embedding_request: PassageQueryEmbeddingRequest, 

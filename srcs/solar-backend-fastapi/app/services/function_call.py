@@ -1,11 +1,11 @@
 import traceback
-from typing import List
 
 from fastapi import HTTPException
 from openai import OpenAI
 from openai.types.chat import ChatCompletionMessage
 
 from app.core.logger import logger
+from app.services.measure_time import measure_time
 
 
 class FunctionCallService:
@@ -13,6 +13,7 @@ class FunctionCallService:
     def __init__(self, open_ai_client: OpenAI):
         self.open_ai_client = open_ai_client
 
+    @measure_time
     async def select_tool_calls(self,
                                 messages,
                                 tools,  # TODO 타입 입력
