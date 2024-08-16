@@ -73,6 +73,6 @@ class ChatService:
             AsyncGenerator: Stream completion response
         """
 
-        response = self.open_ai_client.stream_generate(messages=get_message(messages, contexts), model=model)
+        response = self.open_ai_client.stream_generate(messages=self.get_message(messages, contexts), model=model)
 
         return response
