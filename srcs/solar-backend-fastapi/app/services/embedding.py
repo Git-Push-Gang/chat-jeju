@@ -125,7 +125,7 @@ class EmbeddingService:
             collection: Collection = await client.get_collection(embedding_collection)
             result: QueryResult = await collection.query(
                 query_embeddings=[embedding.embedding for embedding in embeddings],
-                n_results=10)
+                n_results=3)
 
         context = []
         for document in result.get('documents', []):

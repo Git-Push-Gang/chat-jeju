@@ -23,14 +23,17 @@ async def chat(
         function_call_service: FunctionCallService = Depends(ServiceFactory.get_function_call_service),
         embedding_service: EmbeddingService = Depends(ServiceFactory.get_embedding_service),
 ) -> KakaoBotChatResponse:
-    request = kakao_request.to_chat_request(rag=True)
+    request = kakao_request.to_chat_request()
     try:
+        user_utterances = request.messages
+        messages_with_role = [{
+            "role": "user",
+            "content": user_utterances[0]
+        }]
+
         # Tool Calls Selection
         tool_calls_response = await function_call_service.select_tool_calls(
-            messages=[{
-                "role": "user",
-                "content": request.messages[0]
-            }],
+            messages=messages_with_role,
             tools=function_descriptions,
             tool_choice="auto",
         )
@@ -45,13 +48,13 @@ async def chat(
 
                 # Function Calling with RAG
                 contexts = await function_to_call(
-                    messages=request.messages,  # rag 를 위한 function 에서는 사용자 발화만 전달함
+                    messages=user_utterances,  # rag 를 위한 function 에서는 사용자 발화만 전달함
                     region_name="east-kareum",  # 1차적으로 고정값 사용
                     embedding_service=embedding_service
                 )
                 print(f'---- contexts: {contexts}')
 
-                final_response = await chat_service.chat(messages=request.messages,
+                final_response = await chat_service.chat(messages=user_utterances,
                                                          model=request.model.value,
                                                          contexts=contexts)
                 return KakaoBotChatResponse(

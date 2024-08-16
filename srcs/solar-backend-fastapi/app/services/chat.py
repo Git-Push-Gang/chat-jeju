@@ -10,7 +10,6 @@ class ChatService:
     def __init__(self, open_ai_client: OpenAIClient):
         self.open_ai_client = open_ai_client
 
-    @measure_time
     def get_message(self, messages: str, contexts: Optional[EmbeddingContextList], ) -> List[Dict[str, str]]:
         """
         Generate message for chat
@@ -23,21 +22,20 @@ class ChatService:
             List[Dict[str, str]]: List of messages
         """
         nl = '\n'
-        if contexts:
-            contexts = [f"'Context: {f'{nl}'.join([context.text for context in contexts.context])}'"]
-            messages = contexts + messages
+        contexts = [f"'Context: {f'{nl}'.join([context.text for context in contexts.context])}'"]
+        user_utterance = f"User Inquiry: {messages}"
 
-        message = [
+        combined_messages = [
             {
                 "role": "system",
                 "content": SYSTEM_PROMPT
-            }, {
+            },
+            {
                 "role": "user",
-                "content": "\n".join(messages)
-            }
+                "content": "\n".join(contexts + [user_utterance])
+            },
         ]
-
-        return message
+        return combined_messages
 
     @measure_time
     async def chat(self,
@@ -75,6 +73,6 @@ class ChatService:
             AsyncGenerator: Stream completion response
         """
 
-        response = self.open_ai_client.stream_generate(messages=self.get_message(messages, contexts), model=model)
+        response = self.open_ai_client.stream_generate(messages=get_message(messages, contexts), model=model)
 
         return response

@@ -14,5 +14,6 @@ class ErrorResponse(BaseModel):
     statusCode: str = Field(..., description="Status code")
 
 
-SYSTEM_PROMPT = ("You're good at summarizing. Limit your answer to a maximum of three places]. Limit the length of "
-                 "your answer to 300 characters.")
+SYSTEM_PROMPT = """
+    You're good at summarizing. Limit your answer to a maximum of three places. Limit the length of 
+    your answer to 300 characters."""
