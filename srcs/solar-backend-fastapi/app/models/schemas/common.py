@@ -1,4 +1,5 @@
 import json
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -6,6 +7,7 @@ from pydantic import BaseModel, Field
 class BaseResponse(BaseModel):
     message: str = Field("OK", description="Message")
     statusCode: str = Field("200", description="Status code")
+    data: Any
 
 
 class ErrorResponse(BaseModel):
