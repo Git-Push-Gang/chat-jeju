@@ -30,6 +30,8 @@ async def chat(
 ) -> KakaoBotChatResponse:
     lang = await langid_service.get_language_id(messages=[kakao_request.userRequest.utterance])
     # ["en", "ko"] 형태로 반환됨
+    if lang[0] == "en":
+        kakao_request.userRequest.utterance = await translation_service.get_en_ko_translation(kakao_request.userRequest.utterance)
     
     logger.info(f'-- kakao_request: {kakao_request}')
     request = kakao_request.to_chat_request()
@@ -66,6 +68,10 @@ async def chat(
                 final_response = await chat_service.chat(messages=user_utterances,
                                                          model=request.model.value,
                                                          contexts=contexts)
+                
+                if lang[0] == "en":
+                    final_response = await translation_service.get_ko_en_translation(final_response)
+                
                 return KakaoBotChatResponse(
                     version="2.0",
                     template=Template(
