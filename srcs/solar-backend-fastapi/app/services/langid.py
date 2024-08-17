@@ -2,7 +2,7 @@ import aiohttp
 import json
 from typing import List
 
-class LangIDCallService:
+class LangIdService:
 
     async def get_language_id(self, messages: List[str]) -> List[str]:
         """
