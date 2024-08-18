@@ -68,5 +68,5 @@ description = {
     },
 }
 
-text = get_detailed_information_of_a_specific_stay(stay_name="바띠에")
-print(text)
+# text = get_detailed_information_of_a_specific_stay(stay_name="바띠에")
+# print(text)
