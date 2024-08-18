@@ -31,13 +31,14 @@ async def chat(
         embedding_service: EmbeddingService = Depends(ServiceFactory.get_embedding_service),
 ) -> KakaoBotChatResponse:
     try:
+        logger.info(f'-- kakao_request: {kakao_request}')
+
         lang = await langid_service.get_language_id(messages=[kakao_request.userRequest.utterance])
         logger.info(f'lang: {lang}')
         # ["en", "ko"] 형태로 반환됨
         # if lang[0] == "en":
         #     kakao_request.userRequest.utterance = await translation_service.get_en_ko_translation(kakao_request.userRequest.utterance)
 
-        logger.info(f'-- kakao_request: {kakao_request}')
         request = kakao_request.to_chat_request()
         user_utterances = request.messages
         messages_with_role = [{
@@ -46,12 +47,14 @@ async def chat(
         }]
 
         # Tool Calls Selection
-        tool_calls_response = await function_call_service.select_tool_calls(
+        tool_calls = await function_call_service.select_tool_calls(
+            region_name=kakao_request.action.params['region_name'],
+            category_name=kakao_request.action.params['category_name'],
             messages=messages_with_role,
             tools=function_descriptions,
             tool_choice="auto",
         )
-        tool_calls = tool_calls_response.tool_calls
+
         print(f'tool_calls: {tool_calls}')
 
         if tool_calls:
@@ -60,16 +63,16 @@ async def chat(
                 function_name = tool_call.function.name
                 function_to_call = functions[function_name]
                 function_args = json.loads(tool_call.function.arguments)
+                logger.info(f'function_args: {function_args}')
 
                 # Function Calling with RAG
                 if function_name == "get_detailed_information_of_a_specific_stay":
                     arg = function_args.get("stay_name")
-                    logger.info(f'arg: {arg}')
                     contexts = function_to_call(stay_name=arg)
                 else:
                     contexts = await function_to_call(
                         messages=request.messages,
-                        region_name="east-kareum",  # 1차적으로 고정값 사용
+                        region_name=(kakao_request.action.params['region_name']),
                         embedding_service=embedding_service
                     )
                 print(f'---- contexts: {contexts}')
@@ -77,10 +80,10 @@ async def chat(
                 final_response = await chat_service.chat(messages=user_utterances,
                                                          model=request.model.value,
                                                          contexts=contexts)
-                
+
                 if lang[0] == "en":
                     final_response = await translation_service.get_ko_en_translation(final_response)
-                
+
                 return KakaoBotChatResponse(
                     version="2.0",
                     template=Template(
