@@ -28,7 +28,7 @@ class LangIdService:
             # Process each message in the list
             for message in messages:
                 # Prepare the data payload
-                payload = {'q': message}
+                payload = message
                 logger.info(f'payload: {payload}')
                 # Send POST request and await the response
                 async with session.post(url, data=payload) as response:
