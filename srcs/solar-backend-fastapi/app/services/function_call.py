@@ -33,6 +33,8 @@ class FunctionCallService:
                                 tools: Iterable[ChatCompletionToolParam],
                                 tool_choice: ChatCompletionToolChoiceOptionParam,
                                 model: str = 'solar-1-mini-chat') -> list[ChatCompletionMessageToolCall] | None:
+        print(f'region_name: {region_name}')
+        print(f'category_name: {category_name}')
         if region_name and category_name:
             return [ChatCompletionMessageToolCall(
                 id='',

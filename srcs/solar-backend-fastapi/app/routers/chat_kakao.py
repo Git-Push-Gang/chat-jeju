@@ -48,8 +48,8 @@ async def chat(
 
         # Tool Calls Selection
         tool_calls = await function_call_service.select_tool_calls(
-            region_name=kakao_request.action.params['region_name'],
-            category_name=kakao_request.action.params['category_name'],
+            region_name=kakao_request.action.params.get('region_name', None),
+            category_name=kakao_request.action.params.get('category_name', None),
             messages=messages_with_role,
             tools=function_descriptions,
             tool_choice="auto",
@@ -75,7 +75,7 @@ async def chat(
                         region_name=(kakao_request.action.params['region_name']),
                         embedding_service=embedding_service
                     )
-                print(f'---- contexts: {contexts}')
+                # print(f'---- contexts: {contexts}')
 
                 final_response = await chat_service.chat(messages=user_utterances,
                                                          model=request.model.value,

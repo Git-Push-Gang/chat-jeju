@@ -16,7 +16,7 @@ Content-Type: application/json
       "id": "es2mb937ado5bmj04dkzmogn",
       "name": "블록 이름"
     },
-    "utterance": "동카름 카페 추천해줘",
+    "utterance": "바띠에 Wi-Fi 정보 알려줘",
     "lang": null,
     "user": {
       "id": "945412",
@@ -32,8 +32,6 @@ Content-Type: application/json
     "name": "your_action_name",
     "clientExtra": null,
     "params": {
-      "region_name": "east-kareum",
-      "category_name": "dining"
     },
     "id": "your_action_id",
     "detailParams": {}
