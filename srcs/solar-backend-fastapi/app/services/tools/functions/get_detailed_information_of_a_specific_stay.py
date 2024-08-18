@@ -7,7 +7,7 @@ from app.services.measure_time import measure_time
 
 
 @measure_time
-def get_detailed_information_of_a_specific_stay(stay_name: str):
+async def get_detailed_information_of_a_specific_stay(stay_name: str):
     # 숙소 이름을 인자로 받아서 그걸 기준으로 파일 id 찾고(dict) id 기준으로 파일 내용 가져와서
     # 내용 기반 응답 생성
     current_dir = os.path.dirname(os.path.abspath(__file__))
