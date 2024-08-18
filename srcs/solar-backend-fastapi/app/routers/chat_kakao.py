@@ -65,7 +65,7 @@ async def chat(
                 if function_name == "get_detailed_information_of_a_specific_stay":
                     arg = function_args.get("stay_name")
                     logger.info(f'arg: {arg}')
-                    contexts = await function_to_call(stay_name=arg)
+                    contexts = function_to_call(stay_name=arg)
                 else:
                     contexts = await function_to_call(
                         messages=request.messages,

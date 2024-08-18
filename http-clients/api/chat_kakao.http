@@ -16,7 +16,7 @@ Content-Type: application/json
       "id": "es2mb937ado5bmj04dkzmogn",
       "name": "블록 이름"
     },
-    "utterance": "동카름 주변 맛집 추천해줘",
+    "utterance": "바띠에 체크인 정보 알려줘",
     "lang": null,
     "user": {
       "id": "945412",

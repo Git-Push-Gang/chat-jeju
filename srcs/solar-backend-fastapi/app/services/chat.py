@@ -22,7 +22,10 @@ class ChatService:
             List[Dict[str, str]]: List of messages
         """
         nl = '\n'
-        contexts = [f"'Context: {f'{nl}'.join([context.text for context in contexts.context])}'"]
+        if contexts and hasattr(contexts, 'context') and contexts.context:
+            contexts = [f"'Context: {f'{nl}'.join([context.text for context in contexts.context])}'"]
+        else:
+            contexts = [contexts]
         user_utterance = f"User Inquiry: {messages}"
 
         combined_messages = [
