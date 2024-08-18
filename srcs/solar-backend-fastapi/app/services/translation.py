@@ -1,8 +1,9 @@
-from app.clients import OpenAIClient
+from openai import OpenAI
+
 
 class TranslationService:
 
-    def __init__(self, open_ai_client: OpenAIClient):
+    def __init__(self, open_ai_client: OpenAI):
         self.open_ai_client = open_ai_client
 
     def get_en_ko_translation(self, message: str, model: str="solar-1-mini-translate-enko") -> str:

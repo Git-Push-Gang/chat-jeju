@@ -12,6 +12,7 @@ if module_dir not in sys.path:
 module_names = [f.replace('.py', '') for f in os.listdir(module_dir) if f.endswith('.py')]
 
 functions = {}
+print(f"functions: {functions}")
 function_descriptions = []
 
 for name in module_names:

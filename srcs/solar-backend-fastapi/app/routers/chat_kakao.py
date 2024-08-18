@@ -9,11 +9,11 @@ from app.models.schemas.KakaoBotChatRequest import KakaoBotChatRequest
 from app.models.schemas.KakaoBotChatResponse import KakaoBotChatResponse, Template, Output, SimpleText
 from app.services import ChatService, EmbeddingService
 from app.services.function_call import FunctionCallService
+from app.services.langid import LangIdService
 from app.services.measure_time import measure_time
 from app.services.service_factory import ServiceFactory
-from app.services.langid import LangIdService
-from app.services.translation import TranslationService
 from app.services.tools.init_functions import function_descriptions, functions
+from app.services.translation import TranslationService
 
 router = APIRouter()
 
@@ -28,14 +28,15 @@ async def chat(
         function_call_service: FunctionCallService = Depends(ServiceFactory.get_function_call_service),
         embedding_service: EmbeddingService = Depends(ServiceFactory.get_embedding_service),
 ) -> KakaoBotChatResponse:
-    lang = await langid_service.get_language_id(messages=[kakao_request.userRequest.utterance])
-    # ["en", "ko"] 형태로 반환됨
-    # if lang[0] == "en":
-    #     kakao_request.userRequest.utterance = await translation_service.get_en_ko_translation(kakao_request.userRequest.utterance)
-    
-    logger.info(f'-- kakao_request: {kakao_request}')
-    request = kakao_request.to_chat_request()
     try:
+        lang = await langid_service.get_language_id(messages=[kakao_request.userRequest.utterance])
+        logger.info(f'lang: {lang}')
+        # ["en", "ko"] 형태로 반환됨
+        # if lang[0] == "en":
+        #     kakao_request.userRequest.utterance = await translation_service.get_en_ko_translation(kakao_request.userRequest.utterance)
+
+        logger.info(f'-- kakao_request: {kakao_request}')
+        request = kakao_request.to_chat_request()
         user_utterances = request.messages
         messages_with_role = [{
             "role": "user",
