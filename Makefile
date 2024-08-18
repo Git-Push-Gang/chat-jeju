@@ -28,11 +28,8 @@ prep:
 		git -C /home/$$USER/proxy/srcs clone https://github.com/chroma-core/chroma.git chroma; \
 	fi
 
-local:
+web:
 	@docker compose -f ./srcs/docker-compose.yml stop nginx solar-backend
 	@docker compose -f ./srcs/docker-compose.yml up -d --build
 
-local-all: down
-	@docker compose -f ./srcs/docker-compose.yml up -d --build
-
-.PHONY: all re down clean prep local
+.PHONY: all re down clean prep web
