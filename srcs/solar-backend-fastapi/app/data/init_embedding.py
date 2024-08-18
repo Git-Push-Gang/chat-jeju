@@ -32,4 +32,4 @@ def init_embedding():
         send_request(payload)
         time.sleep(1)
 
-init_embedding()
+# init_embedding()

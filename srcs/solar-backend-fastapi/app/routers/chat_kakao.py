@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.core.logger import logger
@@ -57,13 +59,19 @@ async def chat(
             for tool_call in tool_calls:
                 function_name = tool_call.function.name
                 function_to_call = functions[function_name]
+                function_args = json.loads(tool_call.function.arguments)
 
                 # Function Calling with RAG
-                contexts = await function_to_call(
-                    messages=user_utterances,  # rag 를 위한 function 에서는 사용자 발화만 전달함
-                    region_name="east-kareum",  # 1차적으로 고정값 사용
-                    embedding_service=embedding_service
-                )
+                if function_name == "get_detailed_information_of_a_specific_stay":
+                    arg = function_args.get("stay_name")
+                    logger.info(f'arg: {arg}')
+                    contexts = await function_to_call(stay_name=arg)
+                else:
+                    contexts = await function_to_call(
+                        messages=request.messages,
+                        region_name="east-kareum",  # 1차적으로 고정값 사용
+                        embedding_service=embedding_service
+                    )
                 print(f'---- contexts: {contexts}')
 
                 final_response = await chat_service.chat(messages=user_utterances,
