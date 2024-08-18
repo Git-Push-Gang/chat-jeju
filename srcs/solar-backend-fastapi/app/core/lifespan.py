@@ -5,6 +5,7 @@ from app.core.logger import logger
 
 from app.core.db import get_chrome_client
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     try:

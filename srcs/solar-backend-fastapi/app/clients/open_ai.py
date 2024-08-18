@@ -3,10 +3,11 @@ from typing import AsyncGenerator, List
 from openai import AsyncOpenAI, APIConnectionError
 from retry import retry
 
-from app.core.logger import logger
-from app.core.errors.error import OpenAIException
 from app.core.config import config
+from app.core.errors.error import OpenAIException
+from app.core.logger import logger
 from app.models.schemas import EmbeddingResult
+
 
 class OpenAIClient:
     def __init__(self, base_url: str):
@@ -16,7 +17,8 @@ class OpenAIClient:
         )
 
     @retry(tries=5, delay=1, backoff=2, exceptions=APIConnectionError)
-    async def embeddings(self, messages: List[str], model: str = "solar-embedding-1-large-query", **kwargs) -> List[EmbeddingResult]:
+    async def embeddings(self, messages: List[str], model: str = "solar-embedding-1-large-query", **kwargs) -> List[
+        EmbeddingResult]:
         logger.info("Generating embeddings")
         try:
             response = await self.client.embeddings.create(
@@ -47,7 +49,8 @@ class OpenAIClient:
             raise OpenAIException(f"Completion failed: {e}")
 
     @retry(tries=5, delay=1, backoff=2, exceptions=APIConnectionError)
-    async def stream_generate(self, messages: List[str], model: str = "solar-1-mini-chat", **kwargs) -> AsyncGenerator[str, None]:
+    async def stream_generate(self, messages: List[str], model: str = "solar-1-mini-chat", **kwargs) -> AsyncGenerator[
+        str, None]:
         logger.info(f"Generating stream completion for messages: {messages}, model: {model}")
         try:
             response = await self.client.chat.completions.create(

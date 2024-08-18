@@ -1,13 +1,14 @@
 from io import BytesIO
-from httpx import AsyncClient
 
+from httpx import AsyncClient
 from pydantic import TypeAdapter
 
 from app.core.config import config
 from app.models.schemas import LayoutAnalysisResult
 
+
 class UpstageClient:
-    def __init__(self, base_url: str):
+    def __init__(self, base_url):
         self.base_url = "https://api.upstage.ai"
         self.api_key = config.API_KEY
 

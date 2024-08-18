@@ -44,4 +44,3 @@ def get_stay_data():
 
 
 STAY_DATA = get_stay_data()
-# print(STAY_DATA)

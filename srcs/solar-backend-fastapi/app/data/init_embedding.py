@@ -18,7 +18,6 @@ def send_request(payload):
 
 def init_embedding():
     df = pd.read_csv('locations.csv')
-    # print(df.head(5))
 
     for i in range(len(df)):
         message = df.iloc[i]["location_description"]

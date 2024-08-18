@@ -29,21 +29,18 @@ def read_structural_elements(elements):
 
 
 @measure_time
-def get_document_content(file_id, docs_service=docs_service):
+def get_document_content(file_id, docs_service=docs_service) -> str:
     document = docs_service.documents().get(documentId=file_id).execute()
     doc_content = document.get('body').get('content')
     return read_structural_elements(doc_content)
 
 
 @measure_time
-def get_detailed_information_of_a_specific_stay(stay_name: str):
-    # 숙소 이름을 인자로 받아서 그걸 기준으로 파일 id 찾고(dict) id 기준으로 파일 내용 가져와서
-    # 내용 기반 응답 생성
+def get_detailed_information_of_a_specific_stay(stay_name: str) -> str:
     try:
         stay_id = STAY_DATA[stay_name + ' ']
     except KeyError as e:
         stay_id = STAY_DATA[stay_name]
-    # print(stay_id)
 
     return get_document_content(stay_id)
 
@@ -67,6 +64,3 @@ description = {
         },
     },
 }
-
-# text = get_detailed_information_of_a_specific_stay(stay_name="바띠에")
-# print(text)

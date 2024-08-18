@@ -34,10 +34,7 @@ async def chat(
         logger.info(f'-- kakao_request: {kakao_request}')
 
         lang = await langid_service.get_language_id(messages=[kakao_request.userRequest.utterance])
-        logger.info(f'lang: {lang}')
-        # ["en", "ko"] 형태로 반환됨
-        # if lang[0] == "en":
-        #     kakao_request.userRequest.utterance = await translation_service.get_en_ko_translation(kakao_request.userRequest.utterance)
+        logger.info(f'lang: {lang}')  # "en" or "ko"
 
         request = kakao_request.to_chat_request()
         user_utterances = request.messages
@@ -54,11 +51,9 @@ async def chat(
             tools=function_descriptions,
             tool_choice="auto",
         )
-
-        print(f'tool_calls: {tool_calls}')
+        logger.info(f'tool_calls: {tool_calls}')
 
         if tool_calls:
-
             for tool_call in tool_calls:
                 function_name = tool_call.function.name
                 function_to_call = functions[function_name]
@@ -75,7 +70,6 @@ async def chat(
                         region_name=(kakao_request.action.params['region_name']),
                         embedding_service=embedding_service
                     )
-                # print(f'---- contexts: {contexts}')
 
                 final_response = await chat_service.chat(messages=user_utterances,
                                                          model=request.model.value,
@@ -97,9 +91,7 @@ async def chat(
                     )
                 )
         else:
-            # TODO function calling 이 찾지 못한 경우 전체 컬렉션 조회?
-            raise HTTPException(status_code=500, detail=str("적절한 함수를 찾을 수 없음."))
-
+            raise HTTPException(status_code=500, detail=str("Could not find an appropriate tool_calls."))
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -27,6 +27,7 @@ async def chat(
     Chat with OpenAI API
 
     Args:
+        chat_service:
         embedding_service:
         chat_request (ChatRequest): Request body
 

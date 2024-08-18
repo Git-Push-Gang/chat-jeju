@@ -69,6 +69,7 @@ class ChatService:
         If you want to add extra logic, you can add it here. e.g. filtering, validation, rag, etc.
 
         Args:
+            contexts:
             messages (List[str]): List of messages
             model (str, optional): Model name. Defaults to 'solar-1-mini
 

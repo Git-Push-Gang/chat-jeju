@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import List
 
 from fastapi import Depends
 
@@ -11,13 +11,14 @@ from app.services.service_factory import ServiceFactory
 
 
 @measure_time
-def get_to_visit_recommendation(region_name: str,
-                                messages: List[str],
-                                embedding_service: EmbeddingService = Depends(ServiceFactory.get_embedding_service),
-                                ) -> Optional[EmbeddingContextList]:
+async def get_to_visit_recommendation(region_name: str,
+                                      messages: List[str],
+                                      embedding_service: EmbeddingService = Depends(
+                                          ServiceFactory.get_embedding_service),
+                                      ) -> EmbeddingContextList | None:
     collection_name = "embeddings-" + region_name + "_" + "attraction"
 
-    return embedding_service.rag(messages=messages, embedding_collection=collection_name)
+    return await embedding_service.rag(messages=messages, embedding_collection=collection_name)
 
 
 description = {

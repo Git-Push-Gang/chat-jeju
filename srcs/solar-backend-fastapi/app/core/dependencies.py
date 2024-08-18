@@ -4,7 +4,8 @@ from typing import Optional
 from app.core.logger import logger
 from app.models.schemas.embedding import PdfEmbeddingRequest
 
-async def validate_pdf_file(file: UploadFile = Form(...,  description="PDF file"),
+
+async def validate_pdf_file(file: UploadFile = Form(..., description="PDF file"),
                             collection: Optional[str] = Form(None, description="Collection name")
                             ) -> PdfEmbeddingRequest:
     """
