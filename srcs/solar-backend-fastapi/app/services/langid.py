@@ -4,6 +4,7 @@ from typing import List
 
 class LangIdService:
 
+    @classmethod
     async def get_language_id(self, messages: List[str]) -> List[str]:
         """
         Args:
