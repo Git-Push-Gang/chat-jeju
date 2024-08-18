@@ -5,4 +5,4 @@ __pycache__
 
 **/venv
 **/chroma/
-**/credentials.json
+**/service-account.json
