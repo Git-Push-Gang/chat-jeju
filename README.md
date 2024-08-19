@@ -37,15 +37,15 @@ To check out the project:
 git clone https://github.com/Git-Push-Gang/proxy.git
 ```
 
-> [!NOTE]
-> Before running the docker services, comment out `driver_opts` in `docker-compose.yml`
-
 > [!IMPORTANT]
 > You need to specify Upstage API key. Create `.env` in `/srcs` and specify `API_KEY="up....."`
 
 > [!IMPORTANT]
 > Create `.service-account.json` in `/srcs/solar-backend-fastapi/app/data`.
 > This is the Google Cloud Service Account JSON file generated in [Preparation](https://github.com/Git-Push-Gang/proxy?tab=readme-ov-file#preparation).
+
+> [!NOTE]
+> Before running the docker services, comment out `driver_opts` in `docker-compose.yml`
 
 To run the docker services:
 
@@ -56,7 +56,13 @@ make
 
 ## Usage
 
-- To call `Chat JEJU` API
+To initialize embedded collections, do the following command:
+```
+python srcs/solar-backend-fastapi/app/data/init_embedding.py
+```
+
+
+To call `Chat JEJU` API:
 
 ```
 curl -X POST --location "http://localhost/api/v1/chat/kakao?client_name=solar" \
@@ -97,4 +103,11 @@ curl -X POST --location "http://localhost/api/v1/chat/kakao?client_name=solar" \
             "detailParams": {}
           }
         }'
+```
+
+To retrieve embedded collections in chroma db:
+
+```
+curl -X GET --location "http://localhost/api/v1/db/collections" \
+    -H "Accept: application/json"
 ```
