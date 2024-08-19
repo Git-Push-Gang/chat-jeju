@@ -70,10 +70,12 @@ async def chat(
                         region_name=(kakao_request.action.params['region_name']),
                         embedding_service=embedding_service
                     )
+                logger.info("## function call with contexts executed.")
 
                 final_response = await chat_service.chat(messages=user_utterances,
                                                          model=request.model.value,
                                                          contexts=contexts)
+                logger.info("## The final response is ready.")
 
                 if lang[0] == "en":
                     final_response = await translation_service.get_ko_en_translation(final_response)
