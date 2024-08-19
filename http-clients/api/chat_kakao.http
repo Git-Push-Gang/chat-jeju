@@ -5,7 +5,7 @@ Content-Type: application/json
 {
   "intent": {
     "id": "es2mb937ado5bmj04dkzmogn",
-    "name": "블록 이름"
+    "name": "block_name"
   },
   "userRequest": {
     "timezone": "Asia/Seoul",
@@ -14,7 +14,7 @@ Content-Type: application/json
     },
     "block": {
       "id": "es2mb937ado5bmj04dkzmogn",
-      "name": "블록 이름"
+      "name": "block_name"
     },
     "utterance": "Can you tell me the Wi-Fi information for Battie?",
     "lang": null,
@@ -26,7 +26,7 @@ Content-Type: application/json
   },
   "bot": {
     "id": "your_bot_id",
-    "name": "봇 이름"
+    "name": "bot_name"
   },
   "action": {
     "name": "your_action_name",

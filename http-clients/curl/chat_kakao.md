@@ -7,7 +7,7 @@ curl -X POST --location "http://localhost/api/v1/chat/kakao?client_name=solar" \
     -d '{
           "intent": {
             "id": "es2mb937ado5bmj04dkzmogn",
-            "name": "블록 이름"
+            "name": "block_name"
           },
           "userRequest": {
             "timezone": "Asia/Seoul",
@@ -16,9 +16,9 @@ curl -X POST --location "http://localhost/api/v1/chat/kakao?client_name=solar" \
             },
             "block": {
               "id": "es2mb937ado5bmj04dkzmogn",
-              "name": "블록 이름"
+              "name": "block_name"
             },
-            "utterance": "동카름 아늑한 카페 알려줘",
+            "utterance": "Can you tell me the Wi-Fi information for Battie?",
             "lang": null,
             "user": {
               "id": "945412",
@@ -28,7 +28,7 @@ curl -X POST --location "http://localhost/api/v1/chat/kakao?client_name=solar" \
           },
           "bot": {
             "id": "your_bot_id",
-            "name": "봇 이름"
+            "name": "bot_name"
           },
           "action": {
             "name": "your_action_name",
@@ -50,7 +50,7 @@ curl -X POST --location "http://chat-jeju.duckdns.org/api/v1/chat/kakao?client_n
     -d '{
           "intent": {
             "id": "es2mb937ado5bmj04dkzmogn",
-            "name": "블록 이름"
+            "name": "block_name"
           },
           "userRequest": {
             "timezone": "Asia/Seoul",
@@ -59,9 +59,9 @@ curl -X POST --location "http://chat-jeju.duckdns.org/api/v1/chat/kakao?client_n
             },
             "block": {
               "id": "es2mb937ado5bmj04dkzmogn",
-              "name": "블록 이름"
+              "name": "block_name"
             },
-            "utterance": "동카름 아늑한 카페 알려줘",
+            "utterance": "Can you tell me the Wi-Fi information for Battie?",
             "lang": null,
             "user": {
               "id": "945412",
@@ -71,7 +71,7 @@ curl -X POST --location "http://chat-jeju.duckdns.org/api/v1/chat/kakao?client_n
           },
           "bot": {
             "id": "your_bot_id",
-            "name": "봇 이름"
+            "name": "bot_name"
           },
           "action": {
             "name": "your_action_name",
