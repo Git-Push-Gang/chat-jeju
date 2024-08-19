@@ -40,8 +40,12 @@ git clone https://github.com/Git-Push-Gang/proxy.git
 > [!NOTE]
 > Before running the docker services, comment out `driver_opts` in `docker-compose.yml`
 
-> [!NOTE]
+> [!IMPORTANT]
 > You need to specify Upstage API key. Create `.env` in `/srcs` and specify `API_KEY="up....."`
+
+> [!IMPORTANT]
+> Create `.service-account.json` in `/srcs/solar-backend-fastapi/app/data`.
+> This is the Google Cloud Service Account JSON file generated in [Preparation](https://github.com/Git-Push-Gang/proxy?tab=readme-ov-file#preparation).
 
 To run the docker services:
 
