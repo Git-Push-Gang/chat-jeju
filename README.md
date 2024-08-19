@@ -88,7 +88,7 @@ curl -X POST --location "http://localhost/api/v1/chat/kakao?client_name=solar" \
               "id": "es2mb937ado5bmj04dkzmogn",
               "name": "블록 이름"
             },
-            "utterance": "동카름 아늑한 카페 알려줘",
+            "utterance": "Can you tell me the Wi-Fi information for Battie?",
             "lang": null,
             "user": {
               "id": "945412",
