@@ -18,7 +18,7 @@ curl -X POST --location "http://localhost/api/v1/chat/kakao?client_name=solar" \
               "id": "es2mb937ado5bmj04dkzmogn",
               "name": "블록 이름"
             },
-            "utterance": "Hi, Please recommend the place to drink near east-kareum",
+            "utterance": "동카름 아늑한 카페 알려줘",
             "lang": null,
             "user": {
               "id": "945412",
@@ -33,7 +33,8 @@ curl -X POST --location "http://localhost/api/v1/chat/kakao?client_name=solar" \
           "action": {
             "name": "your_action_name",
             "clientExtra": null,
-            "params": {},
+            "params": {
+            },
             "id": "your_action_id",
             "detailParams": {}
           }
@@ -60,7 +61,7 @@ curl -X POST --location "http://chat-jeju.duckdns.org/api/v1/chat/kakao?client_n
               "id": "es2mb937ado5bmj04dkzmogn",
               "name": "블록 이름"
             },
-            "utterance": "Hi, Please recommend the place to drink near east-kareum",
+            "utterance": "동카름 아늑한 카페 알려줘",
             "lang": null,
             "user": {
               "id": "945412",
@@ -75,7 +76,8 @@ curl -X POST --location "http://chat-jeju.duckdns.org/api/v1/chat/kakao?client_n
           "action": {
             "name": "your_action_name",
             "clientExtra": null,
-            "params": {},
+            "params": {
+            },
             "id": "your_action_id",
             "detailParams": {}
           }
