@@ -8,6 +8,7 @@ Content-Type: application/json
     "name": "block_name"
   },
   "userRequest": {
+    "callbackUrl": "https://bot-api.kakao.com/v1/bots/6615572a/callback/cbtoken:fea13896e2684a52bdccd324af20b1d1",
     "timezone": "Asia/Seoul",
     "params": {
       "ignoreMe": "true"
@@ -37,3 +38,24 @@ Content-Type: application/json
     "detailParams": {}
   }
 }
+
+
+####
+POST https://bot-api.kakao.com/v1/bots/6615572a/callback/cbtoken:fea13896e2684a52bdccd324af20b1d1
+Content-Type: application/json
+
+{
+  "version": "2.0",
+  "useCallback": true,
+  "data": null,
+  "template": {
+    "outputs": [
+      {
+        "simpleText": {
+          "text": "Sure, the Wi-Fi information for Battie is as follows:\n\nWi-Fi Name: Battie\nPassword: The password is included in the information sheet provided at check-in. If you lose the password, please contact the front desk."
+        }
+      }
+    ]
+  }
+}
+

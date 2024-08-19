@@ -29,4 +29,11 @@ web:
 	@docker compose -f ./srcs/docker-compose.yml stop nginx solar-backend
 	@docker compose -f ./srcs/docker-compose.yml up -d --build
 
-.PHONY: all re down clean prep web
+webl:
+	@docker compose -f ./srcs/docker-compose.yml stop nginx solar-backend
+	@docker compose -f ./srcs/docker-compose.yml up --build
+
+webd:
+	@docker compose -f ./srcs/docker-compose.yml stop nginx solar-backend
+
+.PHONY: all re down clean prep web webd webl

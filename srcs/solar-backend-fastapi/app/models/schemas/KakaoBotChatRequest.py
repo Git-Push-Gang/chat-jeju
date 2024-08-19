@@ -25,6 +25,7 @@ class Block:
 
 @dataclass
 class UserRequest:
+    callbackUrl: Optional[str]
     timezone: str
     params: Dict[str, str]
     block: Block
