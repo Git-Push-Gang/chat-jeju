@@ -35,7 +35,6 @@ To check out the project:
 
 ```
 git clone https://github.com/Git-Push-Gang/proxy.git
-cd proxy
 ```
 
 > [!NOTE]
