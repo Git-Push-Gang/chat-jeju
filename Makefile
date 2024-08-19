@@ -21,11 +21,8 @@ clean:
 	@docker network ls | tail -n +2 | awk '$$2 !~ /bridge|none|host/' | awk '{ print $$1 }' | xargs -r -I {} docker network rm {}
 
 prep:
-	@if [ ! -d "/home/$$USER/chroma-data" ]; then \
-		mkdir -p /home/$$USER/chroma-data; \
-	fi
-	@if [ ! -d "/home/$$USER/proxy/srcs/chroma" ]; then \
-		git -C /home/$$USER/proxy/srcs clone https://github.com/chroma-core/chroma.git chroma; \
+	@if [ ! -d "./srcs/chroma" ]; then \
+		git -C ./srcs clone https://github.com/chroma-core/chroma.git chroma; \
 	fi
 
 web:
