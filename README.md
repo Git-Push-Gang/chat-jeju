@@ -19,6 +19,16 @@
 
 ![Flowchart.png](Flowchart.png)
 
+## Preparation
+Issuing a Service Account Key File for using google Docs API
+
+1. Log in to the Google Cloud Console.
+2. In the project selection menu, choose "New Project" and create a new project.
+3. In the left menu, go to "APIs & Services" > "Library," search for and enable both the Google Docs API and Google Drive API.
+4. In the left menu, navigate to "APIs & Services" > "Credentials," click the "Create Credentials" button, and select "Service Account."
+5. Click "Create Key" and choose the "JSON" key type. <- This is the service account key.
+6. Open the document you want to access via the API in Google Drive, and add the service account email address in the sharing settings.
+
 ## Getting Started
 
 To check out the project:
