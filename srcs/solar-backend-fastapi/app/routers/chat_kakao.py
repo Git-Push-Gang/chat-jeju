@@ -1,14 +1,15 @@
 from __future__ import annotations
 
+import asyncio
 import json
 
-from fastapi import APIRouter, Depends, HTTPException
+import httpx
+from fastapi import APIRouter, HTTPException, Depends
 
 from app.core.logger import logger
-from app.models.schemas import (
-    ErrorResponse, )
+from app.models.schemas import ErrorResponse
 from app.models.schemas.KakaoBotChatRequest import KakaoBotChatRequest
-from app.models.schemas.KakaoBotChatResponse import KakaoBotChatResponse, Template, Output, SimpleText
+from app.models.schemas.KakaoBotChatResponse import KakaoBotChatResponse, Template, Output, SimpleText, Data
 from app.services import ChatService, EmbeddingService
 from app.services.function_call import FunctionCallService
 from app.services.langid import LangIdService
@@ -22,80 +23,105 @@ router = APIRouter()
 
 @measure_time
 @router.post("/chat/kakao", response_model=KakaoBotChatResponse, responses={400: {"model": ErrorResponse}})
-async def chat(
-        kakao_request: KakaoBotChatRequest,
-        langid_service: LangIdService = Depends(ServiceFactory.get_langid_service),
-        translation_service: TranslationService = Depends(ServiceFactory.get_translation_service),
-        chat_service: ChatService = Depends(ServiceFactory.get_chat_service),
-        function_call_service: FunctionCallService = Depends(ServiceFactory.get_function_call_service),
-        embedding_service: EmbeddingService = Depends(ServiceFactory.get_embedding_service),
-) -> KakaoBotChatResponse:
+async def chat(kakao_request: KakaoBotChatRequest,
+               langid_service: LangIdService = Depends(ServiceFactory.get_langid_service),
+               translation_service: TranslationService = Depends(
+                   ServiceFactory.get_translation_service),
+               chat_service: ChatService = Depends(ServiceFactory.get_chat_service),
+               function_call_service: FunctionCallService = Depends(
+                   ServiceFactory.get_function_call_service),
+               embedding_service: EmbeddingService = Depends(
+                   ServiceFactory.get_embedding_service),
+               ) -> KakaoBotChatResponse:
     try:
         logger.info(f'-- kakao_request: {kakao_request}')
+        languages = await langid_service.get_language_id(messages=[kakao_request.userRequest.utterance])
+        logger.info(f'lang: {languages}')
 
-        lang = await langid_service.get_language_id(messages=[kakao_request.userRequest.utterance])
-        logger.info(f'lang: {lang}')  # "en" or "ko"
-
-        request = kakao_request.to_chat_request()
-        user_utterances = request.messages
-        messages_with_role = [{
-            "role": "user",
-            "content": user_utterances[0]
-        }]
-
-        # Tool Calls Selection
-        tool_calls = await function_call_service.select_tool_calls(
-            region_name=kakao_request.action.params.get('region_name', None),
-            category_name=kakao_request.action.params.get('category_name', None),
-            messages=messages_with_role,
-            tools=function_descriptions,
-            tool_choice="auto",
-        )
-        logger.info(f'tool_calls: {tool_calls}')
-
-        if tool_calls:
-            for tool_call in tool_calls:
-                function_name = tool_call.function.name
-                function_to_call = functions[function_name]
-                function_args = json.loads(tool_call.function.arguments)
-                logger.info(f'function_args: {function_args}')
-
-                # Function Calling with RAG
-                if function_name == "get_detailed_information_of_a_specific_stay":
-                    arg = function_args.get("stay_name")
-                    contexts = function_to_call(stay_name=arg)
-                else:
-                    logger.info(f"--before function call")
-                    contexts = await function_to_call(
-                        messages=request.messages,
-                        region_name=function_args.get("region_name"),
-                        embedding_service=embedding_service
-                    )
-                logger.info("## function call with contexts executed.")
-
-                final_response = await chat_service.chat(messages=user_utterances,
-                                                         model=request.model.value,
-                                                         contexts=contexts)
-                logger.info("## The final response is ready.")
-
-                if lang[0] == "en":
-                    final_response = await translation_service.get_ko_en_translation(final_response)
-                    logger.info(f"## The translated final response is ready. final_response: {final_response}")
-
-                return KakaoBotChatResponse(
-                    version="2.0",
-                    template=Template(
-                        outputs=[
-                            Output(
-                                simpleText=SimpleText(
-                                    text=final_response
-                                )
-                            )
-                        ]
-                    )
-                )
-        else:
-            raise HTTPException(status_code=500, detail=str("Could not find an appropriate tool_calls."))
-
+        asyncio.create_task(process_and_send_callback(kakao_request,
+                                                      translation_service,
+                                                      chat_service,
+                                                      function_call_service,
+                                                      embedding_service,
+                                                      ))
+        return await create_initial_response(languages[0])
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+async def create_initial_response(lang: str):
+    if lang == 'ko':
+        text = "잠시만 기다려 주시면 곧 답변 드리겠습니다."
+    else:
+        text = "Please hold on for a moment. I’ll respond shortly."
+    return KakaoBotChatResponse(
+        useCallback=True,
+        data=Data(text=text))
+
+
+async def process_and_send_callback(request: KakaoBotChatRequest,
+                                    translation_service: TranslationService,
+                                    chat_service: ChatService,
+                                    function_call_service: FunctionCallService,
+                                    embedding_service: EmbeddingService):
+    user_utterances = [request.userRequest.utterance]
+    messages_with_role = [{
+        "role": "user",
+        "content": user_utterances[0]
+    }]
+
+    # Tool Calls Selection
+    tool_calls = await function_call_service.select_tool_calls(
+        region_name=request.action.params.get('region_name', None),
+        category_name=request.action.params.get('category_name', None),
+        messages=messages_with_role,
+        tools=function_descriptions,
+        tool_choice="auto",
+    )
+    logger.info(f'tool_calls: {tool_calls}')
+
+    if tool_calls:
+        for tool_call in tool_calls:
+            function_name = tool_call.function.name
+            function_to_call = functions[function_name]
+            function_args = json.loads(tool_call.function.arguments)
+            logger.info(f'function_args: {function_args}')
+
+            # Function Calling with RAG
+            if function_name == "get_detailed_information_of_a_specific_stay":
+                arg = function_args.get("stay_name")
+                contexts = function_to_call(stay_name=arg)
+            else:
+                logger.info(f"--before function call")
+                contexts = await function_to_call(
+                    messages=user_utterances,
+                    region_name=function_args.get("region_name"),
+                    embedding_service=embedding_service
+                )
+            logger.info("## function call with contexts executed.")
+
+            final_response = await chat_service.chat(messages=user_utterances,
+                                                     model="solar-1-mini-chat",
+                                                     contexts=contexts)
+            logger.info("## The final response is ready.")
+
+            if lang[0] == "en":
+                final_response = await translation_service.get_ko_en_translation(final_response)
+                logger.info(f"## The translated final response is ready. final_response: {final_response}")
+
+            async with httpx.AsyncClient() as client:
+                await client.post(request.userRequest.callbackUrl, json=final_response)
+
+            return KakaoBotChatResponse(
+                template=Template(
+                    outputs=[
+                        Output(
+                            simpleText=SimpleText(
+                                text=final_response
+                            )
+                        )
+                    ]
+                )
+            )
+    else:
+        raise HTTPException(status_code=500, detail=str("Could not find an appropriate tool_calls."))

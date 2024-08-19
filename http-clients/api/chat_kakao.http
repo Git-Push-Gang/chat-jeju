@@ -8,6 +8,7 @@ Content-Type: application/json
     "name": "block_name"
   },
   "userRequest": {
+    "callbackUrl": "localhost:8080",
     "timezone": "Asia/Seoul",
     "params": {
       "ignoreMe": "true"
