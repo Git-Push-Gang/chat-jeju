@@ -1,3 +1,4 @@
+import os
 import time
 
 import pandas as pd
@@ -16,8 +17,8 @@ def send_request(payload):
         print(f"Request failed for ID: {payload['id']} with status code: {response.status_code}")
 
 
-def init_embedding():
-    df = pd.read_csv('locations.csv')
+def init_embedding(file_path):
+    df = pd.read_csv(file_path)
 
     for i in range(len(df)):
         message = df.iloc[i]["location_description"]
@@ -31,4 +32,8 @@ def init_embedding():
         send_request(payload)
         time.sleep(1)
 
-# init_embedding()
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(current_dir, 'locations.csv')
+
+init_embedding(file_path)

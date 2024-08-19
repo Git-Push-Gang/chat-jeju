@@ -53,7 +53,6 @@ async def embeddings_passage(
     Returns:
         EmbeddingResponse: Embedding response
     """
-    logger.info(f'embedding_request: {embedding_request}')
     result = await embedding_service.passage_embeddings(
         messages=embedding_request.messages,
         model=embedding_request.model.value,
