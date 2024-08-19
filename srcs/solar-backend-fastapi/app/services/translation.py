@@ -1,11 +1,14 @@
 from openai import OpenAI
 
+from app.services.measure_time import measure_time
+
 
 class TranslationService:
 
     def __init__(self, open_ai_client: OpenAI):
         self.open_ai_client = open_ai_client
 
+    @measure_time
     async def get_en_ko_translation(self, message: str, model: str = "solar-1-mini-translate-enko") -> str:
         """
         Generate message for chat
