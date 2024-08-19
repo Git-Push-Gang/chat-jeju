@@ -112,7 +112,7 @@ class EmbeddingService:
         Search embeddings from ChromaDB top-10 similar embeddings
 
         Args:
-            query (str): User query messages.
+            messages:
             model (str, optional): Model name. Use query model for user query.
 
         Returns:

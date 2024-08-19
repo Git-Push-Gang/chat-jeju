@@ -65,9 +65,10 @@ async def chat(
                     arg = function_args.get("stay_name")
                     contexts = function_to_call(stay_name=arg)
                 else:
+                    logger.info(f"--before function call")
                     contexts = await function_to_call(
                         messages=request.messages,
-                        region_name=(kakao_request.action.params['region_name']),
+                        region_name=function_args.get("region_name"),
                         embedding_service=embedding_service
                     )
                 logger.info("## function call with contexts executed.")

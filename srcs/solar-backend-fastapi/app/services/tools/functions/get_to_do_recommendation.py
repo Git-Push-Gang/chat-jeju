@@ -39,7 +39,7 @@ description = {
                     "description": "User inquiry about to-do options",
                 },
             },
-            "required": ["region_name", " mesage"],
+            "required": ["region_name", "message"],
         },
     },
 }

@@ -40,7 +40,7 @@ description = {
                     "description": "User inquiry about to-visit options",
                 },
             },
-            "required": ["region_name", " mesage"],
+            "required": ["region_name", "message"],
         },
     },
 }

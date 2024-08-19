@@ -4,6 +4,7 @@ from typing import List
 
 from fastapi import Depends
 
+from app.core.logger import logger
 from app.models.schemas import EmbeddingContextList
 from app.services import EmbeddingService
 from app.services.measure_time import measure_time
@@ -39,7 +40,7 @@ description = {
                     "description": "User inquiry about dining options",
                 },
             },
-            "required": ["region_name", " mesage"],
+            "required": ["region_name", "message"],
         },
     },
 }
