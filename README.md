@@ -61,8 +61,14 @@ To initialize embedded collections, do the following command:
 python srcs/solar-backend-fastapi/app/data/init_embedding.py
 ```
 
+To ask a question to the `Chat JEJU` chatbot and get an answer:
 
-To call `Chat JEJU` API:
+- To get up-to-date information about your accommodation, use `{accommodation_name}` in `utterance` field of request
+  body.
+  - e.g. `'Can you tell me the Wi-Fi information for {Battie}?'`
+- To ask what information you want to get from a region, use `{region_name}` in `utterance` field of request
+  body.
+  - e.g. `'Can you recommend a cozy cafe in {East Kareum}?'`
 
 ```
 curl -X POST --location "http://localhost/api/v1/chat/kakao?client_name=solar" \
@@ -82,7 +88,7 @@ curl -X POST --location "http://localhost/api/v1/chat/kakao?client_name=solar" \
               "id": "es2mb937ado5bmj04dkzmogn",
               "name": "블록 이름"
             },
-            "utterance": "하효일 정보 알려줘",
+            "utterance": "동카름 아늑한 카페 알려줘",
             "lang": null,
             "user": {
               "id": "945412",
