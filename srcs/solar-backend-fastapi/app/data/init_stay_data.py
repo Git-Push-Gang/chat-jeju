@@ -1,20 +1,14 @@
 import os
 
+from app.services.measure_time import measure_time
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
-
-from app.services.measure_time import measure_time
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 module_dir = os.path.join(current_dir, 'service-account.json')
 
 SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
-SERVICE_ACCOUNT_FILE = module_dir  # 본인 구글API json path
-credentials = service_account.Credentials.from_service_account_file(
-    SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-
-docs_service = build('docs', 'v1', credentials=credentials)
-
+SERVICE_ACCOUNT_FILE = module_dir  # Your Google API json path
 
 @measure_time
 def get_stay_data():
@@ -43,4 +37,10 @@ def get_stay_data():
     return mapped_dict
 
 
-STAY_DATA = get_stay_data()
+if os.path.exists(SERVICE_ACCOUNT_FILE):
+    credentials = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    docs_service = build('docs', 'v1', credentials=credentials)
+    STAY_DATA = get_stay_data()
+else:
+    STAY_DATA = {}
