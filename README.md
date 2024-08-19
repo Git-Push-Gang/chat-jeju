@@ -41,6 +41,9 @@ cd proxy
 > [!NOTE]
 > Before running the docker services, comment out `driver_opts` in `docker-compose.yml`
 
+> [!NOTE]
+> You need to specify Upstage API key. Create `.env` in `/srcs` and specify `API_KEY="up....."`
+
 To run the docker services:
 
 ```
