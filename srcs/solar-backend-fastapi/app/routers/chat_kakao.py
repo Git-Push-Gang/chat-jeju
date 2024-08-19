@@ -80,7 +80,7 @@ async def chat(
 
                 if lang[0] == "en":
                     final_response = await translation_service.get_ko_en_translation(final_response)
-                    logger.info("## The translated final response is ready.")
+                    logger.info(f"## The translated final response is ready. final_response: {final_response}")
 
                 return KakaoBotChatResponse(
                     version="2.0",
