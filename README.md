@@ -56,7 +56,7 @@ make
 
 ## Usage
 
-To initialize embedded collections, do the following command:
+To initialize embedding collections, do the following command:
 ```
 python srcs/solar-backend-fastapi/app/data/init_embedding.py
 ```
@@ -111,7 +111,7 @@ curl -X POST --location "http://localhost/api/v1/chat/kakao?client_name=solar" \
         }'
 ```
 
-To retrieve embedded collections in chroma db:
+To retrieve embedding collections in chroma db:
 
 ```
 curl -X GET --location "http://localhost/api/v1/db/collections" \
