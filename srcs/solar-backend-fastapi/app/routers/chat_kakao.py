@@ -89,7 +89,8 @@ async def process_and_send_callback(
             logger.info(f"Kakao response: {callback_response}")
     except Exception as e:
         logger.error(f"Error in process_and_send_callback: {str(e)}", exc_info=True)
-        raise HTTPException(status_code=500, detail=str(e))
+        callback_response = await send_callback_response(request.userRequest.callbackUrl, "일시적인 오류가 발생하였습니다.")
+        logger.info(f"Kakao response: {callback_response}")
 
 
 async def select_tool_calls(request, function_call_service, messages_with_role):
