@@ -155,10 +155,17 @@ async def send_callback_response(callback_url, final_text):
                 json=final_json,
                 timeout=1.0
             )
-            logger.info(f"Kakao response: {response}")
+            logger.info(f"Kakao response status code: {response.status_code}")
+            logger.info(f"Kakao response headers: {response.headers}")
+
+            try:
+                response_json = response.json()
+                logger.info(f"Kakao response body: {json.dumps(response_json, indent=2)}")
+            except json.JSONDecodeError:
+                logger.info(f"Kakao response body (text): {response.text}")
         except TimeoutException:
             logger.error("Request timed out after 1 second")
         except RequestError as e:
             logger.error(f"Request failed: {str(e)}")
         except Exception as e:
-            logger.error(f"Unexpected error: {str(e)}")
+            logger.error(f"Unexpected error: {str(e)}", exc_info=True)
