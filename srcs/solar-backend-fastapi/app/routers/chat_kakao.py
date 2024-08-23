@@ -85,8 +85,8 @@ async def process_and_send_callback(
             if "en" in langs:
                 final_text = await translate_response(final_text, translation_service)
 
-            await send_callback_response(request.userRequest.callbackUrl, final_text)
-
+            callback_response = await send_callback_response(request.userRequest.callbackUrl, final_text)
+            logger.info(f"Kakao response: {callback_response}")
     except Exception as e:
         logger.error(f"Error in process_and_send_callback: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))

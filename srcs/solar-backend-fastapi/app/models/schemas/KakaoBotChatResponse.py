@@ -25,6 +25,6 @@ class Data:
 @dataclass
 class KakaoBotChatResponse:
     version: str = field(default="2.0")
-    useCallback: Optional[bool] = None
+    useCallback: Optional[bool] = field(default=True)
     data: Optional[Data] = None
     template: Optional[Template] = None
