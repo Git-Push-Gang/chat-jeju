@@ -36,7 +36,6 @@ async def chat(kakao_request: KakaoBotChatRequest,
     try:
         logger.info(f'-- kakao_request: {kakao_request}')
         langs = await langid_service.get_language_id(messages=[kakao_request.userRequest.utterance])
-        logger.info(f'lang: {langs}')
 
         asyncio.create_task(process_and_send_callback(kakao_request,
                                                       langs,
@@ -45,6 +44,7 @@ async def chat(kakao_request: KakaoBotChatRequest,
                                                       function_call_service,
                                                       embedding_service,
                                                       ))
+        logger.info("process_and_send_callback requested.")
         return create_initial_response(langs[0])
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
