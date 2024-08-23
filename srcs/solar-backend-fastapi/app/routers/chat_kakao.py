@@ -117,9 +117,14 @@ async def process_and_send_callback(request: KakaoBotChatRequest,
             async with httpx.AsyncClient() as client:
                 logger.info(f"Callback URL: {request.userRequest.callbackUrl}")
                 final_response_from_kakao = await client.post(url=request.userRequest.callbackUrl,
-                                                              json=KakaoBotChatResponse(
-                                                                  template=Template(outputs=[Output(
-                                                                      simpleText=SimpleText(text=final_response))])))
+                                                              json=json.dumps(create_final_kakao_response(final_response)))
                 logger.info(f"## [FINAL_RESPONSE_FROM_KAKAO] {final_response_from_kakao}")
     else:
         raise HTTPException(status_code=500, detail=str("Could not find an appropriate tool_calls."))
+
+
+def create_final_kakao_response(final_text):
+    return KakaoBotChatResponse(
+        template=Template(
+            outputs=[Output(
+                simpleText=SimpleText(text=final_text))]))

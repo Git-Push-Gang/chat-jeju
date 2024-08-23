@@ -38,3 +38,23 @@ Content-Type: application/json
     "detailParams": {}
   }
 }
+
+
+###
+POST https://bot-api.kakao.com/v1/bots/66b5c14bb0c3507e5515572a/callback/cbtoken:feeaba3ade5c4e41b3acd648e24db3a3
+Content-Type: application/json
+
+{
+  "version": "2.0",
+  "useCallback": null,
+  "data": null,
+  "template": {
+    "outputs": [
+      {
+        "simpleText": {
+          "text": "Your final response text here"
+        }
+      }
+    ]
+  }
+}
