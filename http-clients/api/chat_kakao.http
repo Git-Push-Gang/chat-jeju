@@ -41,7 +41,7 @@ Content-Type: application/json
 
 
 ###
-POST https://bot-api.kakao.com/v1/bots/66b5c14bb0c3507e5515572a/callback/cbtoken:feeaba3ade5c4e41b3acd648e24db3a3
+POST https://bot-api.kakao.com/v1/bots/66b5c14bb0c3507e5515572a/callback/cbtoken:524c348c06b540b3a26aae50c6eeb54b
 Content-Type: application/json
 
 {
