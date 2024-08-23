@@ -10,7 +10,7 @@ from httpx import RequestError, Client, TimeoutException
 from app.core.logger import logger
 from app.models.schemas import ErrorResponse
 from app.models.schemas.KakaoBotChatRequest import KakaoBotChatRequest
-from app.models.schemas.KakaoBotChatResponse import KakaoBotChatResponse, Template, Output, SimpleText, Data
+from app.models.schemas.KakaoBotChatResponse import KakaoBotChatResponse, Data
 from app.services import ChatService, EmbeddingService
 from app.services.function_call import FunctionCallService
 from app.services.langid import LangIdService
@@ -129,14 +129,6 @@ async def process_tool_call(tool_call, user_utterance, embedding_service, chat_s
     return final_text
 
 
-def create_kakao_response(final_text):
-    return KakaoBotChatResponse(
-        template=Template(
-            outputs=[Output(simpleText=SimpleText(text=final_text))]
-        )
-    )
-
-
 async def translate_response(final_text, translation_service):
     logger.info("Translation requested.")
     translated_text = await translation_service.get_ko_en_translation(final_text)
@@ -148,12 +140,24 @@ async def send_callback_response(callback_url, final_text):
     final_response = create_kakao_response(final_text)
     with Client() as client:
         try:
-            final_json = json.dumps(final_response, default=lambda o: o.__dict__, indent=2)
-            logger.info(f"Final JSON: {final_json}")
             response = client.post(
                 url=callback_url,
-                json=final_json,
-                timeout=1.0
+                headers={"Content-Type": "application/json"},
+                json={
+                    "version": "2.0",
+                    "useCallback": True,
+                    "data": None,
+                    "template": {
+                        "outputs": [
+                            {
+                                "simpleText": {
+                                    "text": final_text
+                                }
+                            }
+                        ]
+                    }
+                },
+                timeout=3.0
             )
             logger.info(f"Kakao response status code: {response.status_code}")
             logger.info(f"Kakao response headers: {response.headers}")

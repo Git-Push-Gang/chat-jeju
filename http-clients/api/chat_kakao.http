@@ -8,7 +8,7 @@ Content-Type: application/json
     "name": "block_name"
   },
   "userRequest": {
-    "callbackUrl": "https://bot-api.kakao.com/v1/bots/6615572a/callback/cbtoken:4245800ae73f4799bf084118a384a62f",
+    "callbackUrl": "https://bot-api.kakao.com/v1/bots/6615572a/callback/cbtoken:fea13896e2684a52bdccd324af20b1d1",
     "timezone": "Asia/Seoul",
     "params": {
       "ignoreMe": "true"
@@ -41,7 +41,7 @@ Content-Type: application/json
 
 
 ####
-POST https://bot-api.kakao.com/v1/bots/6615572a/callback/cbtoken:4245800ae73f4799bf084118a384a62f
+POST https://bot-api.kakao.com/v1/bots/6615572a/callback/cbtoken:fea13896e2684a52bdccd324af20b1d1
 Content-Type: application/json
 
 {
@@ -58,3 +58,4 @@ Content-Type: application/json
     ]
   }
 }
+
