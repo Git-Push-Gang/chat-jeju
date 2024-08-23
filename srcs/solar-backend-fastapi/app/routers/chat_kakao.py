@@ -139,7 +139,9 @@ def getRegionName(function_args):
         '동카름': 'east-kareum',
         '서카름': 'east-kareum',
         '남카름': 'al-kareum',
-        '북카름': 'ut-kareum'
+        '북카름': 'ut-kareum',
+        'south-kareum': 'al-kareum',
+        'north-kareum': 'ut-kareum',
     }
     return regions.get(function_args.get("region_name"), function_args.get("region_name"))
 
