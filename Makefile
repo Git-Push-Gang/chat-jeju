@@ -29,6 +29,10 @@ web:
 	@docker compose -f ./srcs/docker-compose.yml stop nginx solar-backend
 	@docker compose -f ./srcs/docker-compose.yml up -d --build
 
+web-log:
+	@docker compose -f ./srcs/docker-compose.yml stop nginx solar-backend
+	@docker compose -f ./srcs/docker-compose.yml up --build
+
 web-down:
 	@docker compose -f ./srcs/docker-compose.yml stop nginx solar-backend
 
