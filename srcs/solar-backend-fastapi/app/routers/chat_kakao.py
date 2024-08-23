@@ -103,28 +103,28 @@ async def process_and_send_callback(request: KakaoBotChatRequest,
                 )
             logger.info("## function call with contexts executed.")
 
-            final_response = await chat_service.chat(messages=user_utterances,
+            final_text = await chat_service.chat(messages=user_utterances,
                                                      model="solar-1-mini-chat",
                                                      contexts=contexts)
             logger.info("## The final response is ready.")
 
             if "en" in langs:
                 logger.info(f"## [TRANSLATION] requested.")
-                final_response = await translation_service.get_ko_en_translation(final_response)
+                final_text = await translation_service.get_ko_en_translation(final_text)
                 logger.info(
-                    f"## [TRANSLATION] The translated final response is ready. final_response: {final_response}")
+                    f"## [TRANSLATION] The translated final response is ready. final_text: {final_text}")
 
             async with httpx.AsyncClient() as client:
                 logger.info(f"Callback URL: {request.userRequest.callbackUrl}")
-                final_json = json.dumps(
+                final_response = json.dumps(
                     KakaoBotChatResponse(
                         template=Template(
                             outputs=[Output(
-                                simpleText=SimpleText(text=final_response))])))
-                logger.info(f"[FINAL_JSON] {final_json}")
+                                simpleText=SimpleText(text=final_text))])))
+                logger.info(f"[FINAL_RESPONSE] {final_response}")
                 final_response_from_kakao = await client.post(url=request.userRequest.callbackUrl,
-                                                              json=final_json)
-                logger.info(f"## [FINAL_RESPONSE_FROM_KAKAO] {final_response_from_kakao}")
+                                                              json=final_response)
+                logger.info(f"## [FINAL_KAKAO_RESPONSE] {final_response_from_kakao}")
     else:
         raise HTTPException(status_code=500, detail=str("Could not find an appropriate tool_calls."))
 
