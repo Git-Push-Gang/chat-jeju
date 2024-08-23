@@ -116,7 +116,7 @@ async def process_tool_call(tool_call, user_utterance, embedding_service, chat_s
     else:
         contexts = await function_to_call(
             messages=[user_utterance],
-            region_name=function_args.get("region_name"),
+            region_name=getRegionName(function_args),
             embedding_service=embedding_service
         )
     logger.info("Function call with contexts executed.")
@@ -128,6 +128,16 @@ async def process_tool_call(tool_call, user_utterance, embedding_service, chat_s
     )
     logger.info("Final response is ready.")
     return final_text
+
+
+def getRegionNameOrDefault(function_args):
+    regions = {
+        '동카름': 'east-kareum',
+        '서카름': 'east-kareum',
+        '남카름': 'al-kareum',
+        '북카름': 'ut-kareum'
+    }
+    return regions.get(function_args.get("region_name"), function_args.get("region_name"))
 
 
 async def translate_response(final_text, translation_service):
