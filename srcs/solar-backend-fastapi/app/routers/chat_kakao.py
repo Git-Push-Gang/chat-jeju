@@ -4,8 +4,8 @@ import asyncio
 import json
 from typing import List
 
-import httpx
 from fastapi import APIRouter, HTTPException, Depends
+from httpx import RequestError, Client, TimeoutException
 
 from app.core.logger import logger
 from app.models.schemas import ErrorResponse
@@ -146,15 +146,19 @@ async def translate_response(final_text, translation_service):
 
 async def send_callback_response(callback_url, final_text):
     final_response = create_kakao_response(final_text)
-    async with httpx.AsyncClient() as client:
+    with Client() as client:
         try:
             final_json = json.dumps(final_response, default=lambda o: o.__dict__, indent=2)
             logger.info(f"Final JSON: {final_json}")
-            response = await client.post(
+            response = client.post(
                 url=callback_url,
                 json=final_json,
                 timeout=1.0
             )
             logger.info(f"Kakao response: {response}")
-        except httpx.TimeoutException as e:
-            logger.error(f"Request timed out: {str(e)}")
+        except TimeoutException:
+            logger.error("Request timed out after 1 second")
+        except RequestError as e:
+            logger.error(f"Request failed: {str(e)}")
+        except Exception as e:
+            logger.error(f"Unexpected error: {str(e)}")
