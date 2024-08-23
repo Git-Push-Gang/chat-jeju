@@ -118,8 +118,8 @@ async def process_and_send_callback(request: KakaoBotChatRequest,
                     template=Template(
                         outputs=[Output(
                             simpleText=SimpleText(text=final_text))])))
-            logger.info(f"Callback URL: {request.userRequest.callbackUrl}")
             logger.info(f"[FINAL_RESPONSE] {final_response}")
+            logger.info(f"Callback URL: {request.userRequest.callbackUrl}")
 
             async with httpx.AsyncClient() as client:
                 final_response_from_kakao = await client.post(url=request.userRequest.callbackUrl,
