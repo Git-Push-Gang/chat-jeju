@@ -108,17 +108,19 @@ async def process_and_send_callback(request: KakaoBotChatRequest,
                                                      contexts=contexts)
             logger.info("## The final response is ready.")
 
-            if "en" in langs:
-                logger.info(f"## [TRANSLATION] requested.")
-                final_text = await translation_service.get_ko_en_translation(final_text)
-                logger.info(
-                    f"## [TRANSLATION] The translated final response is ready. final_text: {final_text}")
             final_response = json.dumps(
                 KakaoBotChatResponse(
                     template=Template(
                         outputs=[Output(
                             simpleText=SimpleText(text=final_text))])))
             logger.info(f"[FINAL_RESPONSE] {final_response}")
+
+            if "en" in langs:
+                logger.info(f"## [TRANSLATION] requested.")
+                final_text = await translation_service.get_ko_en_translation(final_text)
+                logger.info(
+                    f"## [TRANSLATION] The translated final response is ready. final_text: {final_text}")
+
             logger.info(f"Callback URL: {request.userRequest.callbackUrl}")
 
             async with httpx.AsyncClient() as client:
