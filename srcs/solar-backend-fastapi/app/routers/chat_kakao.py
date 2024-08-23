@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+from typing import List
 
 import httpx
 from fastapi import APIRouter, HTTPException, Depends
@@ -61,73 +62,99 @@ def create_initial_response(lang: str):
         data=Data(text=text))
 
 
-async def process_and_send_callback(request: KakaoBotChatRequest,
-                                    langs: [str],
-                                    translation_service: TranslationService,
-                                    chat_service: ChatService,
-                                    function_call_service: FunctionCallService,
-                                    embedding_service: EmbeddingService):
-    user_utterances = [request.userRequest.utterance]
-    messages_with_role = [{
-        "role": "user",
-        "content": user_utterances[0]
-    }]
+async def process_and_send_callback(
+        request: KakaoBotChatRequest,
+        langs: List[str],
+        translation_service: TranslationService,
+        chat_service: ChatService,
+        function_call_service: FunctionCallService,
+        embedding_service: EmbeddingService
+):
+    try:
+        user_utterance = request.userRequest.utterance
+        messages_with_role = [{"role": "user", "content": user_utterance}]
 
-    # Tool Calls Selection
+        tool_calls = await select_tool_calls(request, function_call_service, messages_with_role)
+
+        if not tool_calls:
+            raise ValueError("Could not find an appropriate tool_calls.")
+
+        for tool_call in tool_calls:
+            final_text = await process_tool_call(tool_call, user_utterance, embedding_service, chat_service)
+
+            if "en" in langs:
+                final_text = await translate_response(final_text, translation_service)
+
+            await send_callback_response(request.userRequest.callbackUrl, final_text)
+
+    except Exception as e:
+        logger.error(f"Error in process_and_send_callback: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+async def select_tool_calls(request, function_call_service, messages_with_role):
     tool_calls = await function_call_service.select_tool_calls(
-        region_name=request.action.params.get('region_name', None),
-        category_name=request.action.params.get('category_name', None),
+        region_name=request.action.params.get('region_name'),
+        category_name=request.action.params.get('category_name'),
         messages=messages_with_role,
         tools=function_descriptions,
         tool_choice="auto",
     )
-    logger.info(f'tool_calls: {tool_calls}')
+    logger.info(f'Tool calls selected: {tool_calls}')
+    return tool_calls
 
-    if tool_calls:
-        for tool_call in tool_calls:
-            function_name = tool_call.function.name
-            function_to_call = functions[function_name]
-            function_args = json.loads(tool_call.function.arguments)
-            logger.info(f'function_args: {function_args}')
 
-            # Function Calling with RAG
-            if function_name == "get_detailed_information_of_a_specific_stay":
-                arg = function_args.get("stay_name")
-                contexts = function_to_call(stay_name=arg)
-            else:
-                logger.info(f"--before function call")
-                contexts = await function_to_call(
-                    messages=user_utterances,
-                    region_name=function_args.get("region_name"),
-                    embedding_service=embedding_service
-                )
-            logger.info("## function call with contexts executed.")
+async def process_tool_call(tool_call, user_utterance, embedding_service, chat_service):
+    function_name = tool_call.function.name
+    function_to_call = functions[function_name]
+    function_args = json.loads(tool_call.function.arguments)
+    logger.info(f'Function arguments: {function_args}')
 
-            final_text = await chat_service.chat(messages=user_utterances,
-                                                     model="solar-1-mini-chat",
-                                                     contexts=contexts)
-            logger.info("## The final response is ready.")
-
-            final_response = json.dumps(
-                KakaoBotChatResponse(
-                    template=Template(
-                        outputs=[Output(
-                            simpleText=SimpleText(text=final_text))])))
-            logger.info(f"[FINAL_RESPONSE] {final_response}")
-
-            if "en" in langs:
-                logger.info(f"## [TRANSLATION] requested.")
-                final_text = await translation_service.get_ko_en_translation(final_text)
-                logger.info(
-                    f"## [TRANSLATION] The translated final response is ready. final_text: {final_text}")
-
-            logger.info(f"Callback URL: {request.userRequest.callbackUrl}")
-
-            async with httpx.AsyncClient() as client:
-                final_response_from_kakao = await client.post(url=request.userRequest.callbackUrl,
-                                                              json=final_response)
-                logger.info(f"## [FINAL_KAKAO_RESPONSE] {final_response_from_kakao}")
+    if function_name == "get_detailed_information_of_a_specific_stay":
+        contexts = function_to_call(stay_name=function_args.get("stay_name"))
     else:
-        raise HTTPException(status_code=500, detail=str("Could not find an appropriate tool_calls."))
+        contexts = await function_to_call(
+            messages=[user_utterance],
+            region_name=function_args.get("region_name"),
+            embedding_service=embedding_service
+        )
+    logger.info("Function call with contexts executed.")
+
+    final_text = await chat_service.chat(
+        messages=[user_utterance],
+        model="solar-1-mini-chat",
+        contexts=contexts
+    )
+    logger.info("Final response is ready.")
+    return final_text
 
 
+def create_kakao_response(final_text):
+    return KakaoBotChatResponse(
+        template=Template(
+            outputs=[Output(simpleText=SimpleText(text=final_text))]
+        )
+    )
+
+
+async def translate_response(final_text, translation_service):
+    logger.info("Translation requested.")
+    translated_text = await translation_service.get_ko_en_translation(final_text)
+    logger.info(f"Translated final response: {translated_text}")
+    return translated_text
+
+
+async def send_callback_response(callback_url, final_text):
+    final_response = create_kakao_response(final_text)
+    async with httpx.AsyncClient() as client:
+        try:
+            final_json = json.dumps(final_response, default=lambda o: o.__dict__, indent=2)
+            logger.info(f"Final JSON: {final_json}")
+            response = await client.post(
+                url=callback_url,
+                json=final_json,
+                timeout=1.0
+            )
+            logger.info(f"Kakao response: {response}")
+        except httpx.TimeoutException as e:
+            logger.error(f"Request timed out: {str(e)}")

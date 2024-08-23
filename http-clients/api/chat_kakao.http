@@ -8,7 +8,7 @@ Content-Type: application/json
     "name": "block_name"
   },
   "userRequest": {
-    "callbackUrl": "localhost:8080",
+    "callbackUrl": "https://bot-api.kakao.com/v1/bots/66b5c14bb0c3507e5515572a/callback/cbtoken:6ebb77814307455485e2eb695e51abfe",
     "timezone": "Asia/Seoul",
     "params": {
       "ignoreMe": "true"
