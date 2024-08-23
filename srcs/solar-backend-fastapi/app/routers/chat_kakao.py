@@ -137,7 +137,6 @@ async def translate_response(final_text, translation_service):
 
 
 async def send_callback_response(callback_url, final_text):
-    final_response = create_kakao_response(final_text)
     with Client() as client:
         try:
             response = client.post(
