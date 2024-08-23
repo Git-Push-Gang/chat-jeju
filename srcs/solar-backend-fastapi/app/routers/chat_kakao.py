@@ -55,7 +55,7 @@ def create_initial_response(lang: str):
     if lang == 'ko':
         text = "잠시만 기다려 주시면 곧 답변 드리겠습니다."
     else:
-        text = "Please hold on for a moment. I’ll respond shortly."
+        text = "Please hold on for a moment.\nI’ll respond shortly."
     return KakaoBotChatResponse(
         useCallback=True,
         data=Data(text=text))
@@ -116,7 +116,11 @@ async def process_and_send_callback(request: KakaoBotChatRequest,
 
             async with httpx.AsyncClient() as client:
                 logger.info(f"Callback URL: {request.userRequest.callbackUrl}")
-                final_json = create_final_kakao_response(final_response)
+                final_json = json.dumps(
+                    KakaoBotChatResponse(
+                        template=Template(
+                            outputs=[Output(
+                                simpleText=SimpleText(text=final_response))])))
                 logger.info(f"[FINAL_JSON] {final_json}")
                 final_response_from_kakao = await client.post(url=request.userRequest.callbackUrl,
                                                               json=final_json)
@@ -125,9 +129,3 @@ async def process_and_send_callback(request: KakaoBotChatRequest,
         raise HTTPException(status_code=500, detail=str("Could not find an appropriate tool_calls."))
 
 
-def create_final_kakao_response(final_text) -> str:
-    return json.dumps(
-        KakaoBotChatResponse(
-            template=Template(
-                outputs=[Output(
-                    simpleText=SimpleText(text=final_text))])))
