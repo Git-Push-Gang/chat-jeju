@@ -35,21 +35,22 @@ async def chat(kakao_request: KakaoBotChatRequest,
                ) -> KakaoBotChatResponse:
     try:
         logger.info(f'-- kakao_request: {kakao_request}')
-        languages = await langid_service.get_language_id(messages=[kakao_request.userRequest.utterance])
-        logger.info(f'lang: {languages}')
+        langs = await langid_service.get_language_id(messages=[kakao_request.userRequest.utterance])
+        logger.info(f'lang: {langs}')
 
         asyncio.create_task(process_and_send_callback(kakao_request,
+                                                      langs,
                                                       translation_service,
                                                       chat_service,
                                                       function_call_service,
                                                       embedding_service,
                                                       ))
-        return await create_initial_response(languages[0])
+        return create_initial_response(langs[0])
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
-async def create_initial_response(lang: str):
+def create_initial_response(lang: str):
     if lang == 'ko':
         text = "잠시만 기다려 주시면 곧 답변 드리겠습니다."
     else:
@@ -60,6 +61,7 @@ async def create_initial_response(lang: str):
 
 
 async def process_and_send_callback(request: KakaoBotChatRequest,
+                                    langs: [str],
                                     translation_service: TranslationService,
                                     chat_service: ChatService,
                                     function_call_service: FunctionCallService,
@@ -105,11 +107,13 @@ async def process_and_send_callback(request: KakaoBotChatRequest,
                                                      contexts=contexts)
             logger.info("## The final response is ready.")
 
-            if lang[0] == "en":
+            if "en" in langs:
+                logger.info(f"## [TRANSLATION] requested.")
                 final_response = await translation_service.get_ko_en_translation(final_response)
-                logger.info(f"## The translated final response is ready. final_response: {final_response}")
+                logger.info(f"## [TRANSLATION] The translated final response is ready. final_response: {final_response}")
 
             async with httpx.AsyncClient() as client:
+                logger.info("## [FINAL_REQUEST] The final response is requested to kakao.")
                 await client.post(request.userRequest.callbackUrl, json=final_response)
 
             return KakaoBotChatResponse(
