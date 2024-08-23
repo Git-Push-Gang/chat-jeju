@@ -47,7 +47,7 @@ async def chat(kakao_request: KakaoBotChatRequest,
         logger.info("process_and_send_callback requested.")
         return create_initial_response(langs[0])
     except Exception as e:
-        logger.info(f"##### error: f{e}")
+        logger.error(f"##### error: f{e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
