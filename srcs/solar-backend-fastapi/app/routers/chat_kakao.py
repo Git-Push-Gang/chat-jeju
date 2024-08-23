@@ -90,9 +90,9 @@ async def process_and_send_callback(
     except Exception as e:
         logger.error(f"Error in process_and_send_callback: {str(e)}", exc_info=True)
         if 'en' in langs:
-            final_text = "A temporary error occurred."
+            final_text = "An error occurred temporarily.\nPlease try asking a different question."
         else:
-            final_text = "일시적인 오류가 발생하였습니다."
+            final_text = "일시적인 오류가 발생하였습니다.\n다른 질문을 시도해주세요."
         callback_response = await send_callback_response(request.userRequest.callbackUrl, final_text)
         logger.info(f"Kakao response: {callback_response}")
 
