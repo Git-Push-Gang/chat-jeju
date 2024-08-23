@@ -47,6 +47,7 @@ async def chat(kakao_request: KakaoBotChatRequest,
         logger.info("process_and_send_callback requested.")
         return create_initial_response(langs[0])
     except Exception as e:
+        logger.info(f"##### error: f{e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -114,8 +115,8 @@ async def process_and_send_callback(request: KakaoBotChatRequest,
                     f"## [TRANSLATION] The translated final response is ready. final_response: {final_response}")
 
             async with httpx.AsyncClient() as client:
-                logger.info("## [FINAL_REQUEST] The final response is requested to kakao.")
-                final_response_from_kakao = await client.post(request.userRequest.callbackUrl,
+                logger.info(f"Callback URL: {request.userRequest.callbackUrl}")
+                final_response_from_kakao = await client.post(url=request.userRequest.callbackUrl,
                                                               json=KakaoBotChatResponse(
                                                                   template=Template(outputs=[Output(
                                                                       simpleText=SimpleText(text=final_response))])))
