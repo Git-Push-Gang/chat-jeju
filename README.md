@@ -17,7 +17,11 @@
 
 ## Flow Chart
 
-![Flowchart.png](Flowchart.png)
+![Flowchart.png](./resources/Flowchart.png)
+
+## Demo Video
+
+![demo.gif](./resources/demo.gif)
 
 ## Preparation
 Issuing a Service Account Key File for using google Docs API
