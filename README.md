@@ -21,7 +21,7 @@
 
 ## Demo Video
 
-<img width="300" src="./resources/demo.gif" alt="A demo video is loading..">
+<img width="300" src="./resources/demo_video.gif" alt="A demo video is loading..">
 
 ## Preparation
 Issuing a Service Account Key File for using google Docs API
