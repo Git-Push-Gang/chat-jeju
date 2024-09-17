@@ -114,3 +114,7 @@ chroma db에서 임베딩 컬렉션을 검색하려면:
 curl -X GET --location "http://localhost/api/v1/db/collections" \
     -H "Accept: application/json"
 ```
+
+> [!NOTE]
+> 발표 자료를 원하실 경우, 압축된 pdf 파일을 다운로드 받아주세요 (영상은 용량 문제로 제거하였습니다.)
+> [PDF file](resources/chat_jeju_presentation.compressed.pdf)

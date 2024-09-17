@@ -123,3 +123,8 @@ To retrieve embedding collections in chroma db:
 curl -X GET --location "http://localhost/api/v1/db/collections" \
     -H "Accept: application/json"
 ```
+
+> [!NOTE]
+> If you would like the presentation, please download the zipped PDF file (the video has been removed due to space
+> limitations).
+> [PDF file](resources/chat_jeju_presentation.compressed.pdf)
