@@ -1,5 +1,7 @@
 # Chat JEJU
 
+[English](README.md) | [한국어](README.ko.md)
+
 ## Project Overview
 
 - Jeju Island is home to a multitude of charming, yet undiscovered local accommodations and businesses. Our mission is
