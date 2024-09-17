@@ -116,5 +116,6 @@ curl -X GET --location "http://localhost/api/v1/db/collections" \
 ```
 
 > [!NOTE]
-> 발표 자료를 원하실 경우, 압축된 pdf 파일을 다운로드 받아주세요 (영상은 용량 문제로 제거하였습니다.)
-> [PDF file](resources/chat_jeju_presentation.compressed.pdf)
+> 발표 자료를 원하실 경우, 압축된 pdf 파일을 다운로드 받아주세요. 
+> 렌더링에서는 모든 슬라이드가 보이지 않으며, 영상은 용량 문제로 제거하였습니다.
+> - [PDF file](resources/chat_jeju_presentation.compressed.pdf)

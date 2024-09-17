@@ -125,6 +125,6 @@ curl -X GET --location "http://localhost/api/v1/db/collections" \
 ```
 
 > [!NOTE]
-> If you would like the presentation, please download the zipped PDF file (the video has been removed due to space
-> limitations).
-> [PDF file](resources/chat_jeju_presentation.compressed.pdf)
+> - If you would like the presentation, please download the zipped PDF file. 
+> - Not all slides are visible in the render, and the video has been removed due to capacity issues.
+> - [PDF file](resources/chat_jeju_presentation.compressed.pdf)
