@@ -69,10 +69,10 @@ python srcs/solar-backend-fastapi/app/data/init_embedding.py
 
 To ask a question to the `Chat JEJU` chatbot and get an answer:
 
-- To get up-to-date information about your accommodation, use `{accommodation_name}` in `utterance` field of request
+- To get up-to-date information about your accommodation, include `{accommodation_name}` in `utterance` field of request
   body.
   - e.g. `'Can you tell me the Wi-Fi information for {Battie}?'`
-- To ask what information you want to get from a region, use `{region_name}` in `utterance` field of request
+- To ask what information you want to get from a region, include `{region_name}` in `utterance` field of request
   body.
   - e.g. `'Can you recommend a cozy cafe in {East Kareum}?'`
 
