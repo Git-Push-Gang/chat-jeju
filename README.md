@@ -15,13 +15,13 @@
   Jeju more accessible to international visitors and enhancing their overall experience. Available 24/7, it ensures that
   assistance is always at hand, significantly boosting customer satisfaction.
 
-## Flow Chart
-
-![Flowchart.png](./resources/Flowchart.png)
-
 ## Demo Video
 
 <img width="300" src="./resources/demo_video.gif" alt="A demo video is loading..">
+
+## Flow Chart
+
+![Flowchart.png](./resources/Flowchart.png)
 
 ## Preparation
 Issuing a Service Account Key File for using google Docs API
@@ -81,7 +81,7 @@ curl -X POST --location "http://localhost/api/v1/chat/kakao?client_name=solar" \
     -d '{
           "intent": {
             "id": "es2mb937ado5bmj04dkzmogn",
-            "name": "블록 이름"
+            "name": "block_name"
           },
           "userRequest": {
             "timezone": "Asia/Seoul",
@@ -90,7 +90,7 @@ curl -X POST --location "http://localhost/api/v1/chat/kakao?client_name=solar" \
             },
             "block": {
               "id": "es2mb937ado5bmj04dkzmogn",
-              "name": "블록 이름"
+              "name": "block_name"
             },
             "utterance": "Can you tell me the Wi-Fi information for Battie?",
             "lang": null,
@@ -102,7 +102,7 @@ curl -X POST --location "http://localhost/api/v1/chat/kakao?client_name=solar" \
           },
           "bot": {
             "id": "your_bot_id",
-            "name": "봇 이름"
+            "name": "bot_name"
           },
           "action": {
             "name": "your_action_name",
