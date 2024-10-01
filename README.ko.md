@@ -33,7 +33,7 @@ Google Docs API를 사용하기 위한 서비스 계정 키 파일 발급:
 프로젝트를 확인하려면:
 
 ```
-git clone https://github.com/Git-Push-Gang/proxy.git
+git clone https://github.com/Git-Push-Gang/chat-jeju.git
 ```
 
 > [!IMPORTANT]

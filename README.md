@@ -40,7 +40,7 @@ Issuing a Service Account Key File for using google Docs API
 To check out the project:
 
 ```
-git clone https://github.com/Git-Push-Gang/proxy.git
+git clone https://github.com/Git-Push-Gang/chat-jeju.git
 ```
 
 > [!IMPORTANT]
