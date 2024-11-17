@@ -119,3 +119,8 @@ curl -X GET --location "http://localhost/api/v1/db/collections" \
 > 발표 자료를 원하실 경우, 압축된 pdf 파일을 다운로드 받아주세요. 
 > 렌더링에서는 모든 슬라이드가 보이지 않으며, 영상은 용량 문제로 제거하였습니다.
 > - [PDF file](resources/chat_jeju_presentation.compressed.pdf)
+
+## 업스테이지 글로벌 AI 위크 - AI 해커톤
+![Global AI Week_Git Push Gang](https://github.com/user-attachments/assets/58d7fc51-2882-4569-b997-9a0683509705)
+
+
