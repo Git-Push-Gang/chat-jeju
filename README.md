@@ -128,3 +128,6 @@ curl -X GET --location "http://localhost/api/v1/db/collections" \
 > - If you would like the presentation, please download the zipped PDF file. 
 > - Not all slides are visible in the render, and the video has been removed due to capacity issues.
 > - [PDF file](resources/chat_jeju_presentation.compressed.pdf)
+
+## Upstage Global AI Week Hackathon
+![Global AI Week_Git Push Gang](https://github.com/user-attachments/assets/5226db18-986a-4202-880b-6905b863ed10)
